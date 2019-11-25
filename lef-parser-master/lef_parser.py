@@ -118,10 +118,11 @@ def draw_cells():
 
 # Main Class
 if __name__ == '__main__':
+     
     path = "./libraries/Nangate/NangateOpenCellLibrary.lef"
     lef_parser = LefParser(path)
     lef_parser.parse()
-
+   
     # test via_dict
     via1_2 = lef_parser.via_dict["via1_2"]
     print (via1_2.layers)
