@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import def_parser
 import lef_parser
+from collections import defaultdict
 
 path = "./libraries/Nangate/NangateOpenCellLibrary.lef"
 lef_parser = LefParser(path)
@@ -11,14 +12,34 @@ read_path = "./libraries/DEF/c1908.def"
 def_parser = DefParser(read_path)
 def_parser.parse()
 
-netsDict = {}
+netsDict = defaultdict(list)
 
 for pin in def_parser.pins:
     print(pin)
     
-
-conList = []
+def get_resistance(segment):
+    layer_name = segment.layer
+    rPerSquare = lef_parser.layer_dict[layer_name].resistance[1]
+    width = lef_parser.layer_dict[layer_name].width
+    length = abs(segment.points[0][0] - segment.points[1][0]) + abs(segment.points[0][1] - segment.points[1][1]) 
+    resistance = length * rPerSquare / width
+    return resistance
+    
+def get_capacitance(segment):
+    layer_name = segment.layer
+    cPerSquare = lef_parser.layer_dict[layer_name].capacitance[1]
+    width = lef_parser.layer_dict[layer_name].width
+    length = abs(segment.points[0][0] - segment.points[1][0]) + abs(segment.points[0][1] - segment.points[1][1])
+    if(lef_parser.layer_dict[layer_name].edge_cap != None):
+        edgeCapacitance = lef_parser.layer_dict[layer_name].edge_cap
+    else:
+        edgeCapacitance = 0
+    capacitance = length * cPerSquare * width + edgeCapacitance * length
+    return capacitance
+    
 for net in def_parser.nets:
+    conList = []
+    # generate the conn data structure for conn section
     for con in net.comp_pin:
         #check if pin is *P
         current_pin = []
@@ -40,21 +61,53 @@ for net in def_parser.nets:
                 current_pin.append("I")
             else:
                 current_pin.append("O")
+                
         conList.append(current_pin)
-    
-    
-    segmentsList = []
-    segmentsList.append(['inp1','inp1:1', 1.4,3.4])
-    segmentsList.append(['inp1:1','inp1:2', 1.4,3.5])
-    segmentsList.append(['inp1:2','u1:a', 1.5,3.6])
-    #maxC = getMaxCap(netsDict)
-    
+        
+    # generate the Resistance and Capacitances data structure
+    counter = 1
+    for segment in net.routed:
+        startingNodeKey = str(segment.layer)+str(segment.points[0][0])+str(segment.points[0][1])
+        endingNodeKey = str(segment.layer)+str(segment.points[1][0])+str(segment.points[1][1])
+        if(pinsDict[startingNodeKey] != None):
+            startingNode = pinsDict[startingNodeKey]
+        else:
+            startingNode = str(net.name) + ":" +  str(counter)
+            counter += 1
+            pinsDict[startingNodeKey] = startingNode
+            
+        if(pinsDict[endingNodeKey] != None):
+            endingNode = pinsDict[endingNodeKey]
+        else:    
+            endingNode = str(net.name) + ":" +  str(counter)
+            counter += 1
+            pinsDict[endingNodeKey] = endingNode
+        
+        resistance = get_resistance(segment)
+        capacitance = get_capacitance(segment)
+        
+    """
     newDictionary = {}
     newDictionary['conn'] = conList
     newDictionary['segments'] = segmentsList
     newDictionary['maxC'] = 95
+    """    
     
-    netsDict['_151_'] = newDictionary
+    
+    
+    
+segmentsList = []
+segmentsList.append(['inp1','inp1:1', 1.4,3.4])
+segmentsList.append(['inp1:1','inp1:2', 1.4,3.5])
+segmentsList.append(['inp1:2','u1:a', 1.5,3.6])
+#maxC = getMaxCap(netsDict)
+
+newDictionary = {}
+newDictionary['conn'] = conList
+newDictionary['segments'] = segmentsList
+newDictionary['maxC'] = 95
+
+netsDict['_151_'] = newDictionary
 
 
 #def getMaxCap(netsDict):
