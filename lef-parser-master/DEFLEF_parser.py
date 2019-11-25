@@ -65,26 +65,61 @@ for net in def_parser.nets:
         conList.append(current_pin)
         
     # generate the Resistance and Capacitances data structure
+#    counter = 1
+#    for segment in net.routed:
+#        startingNodeKey = str(segment.layer)+str(segment.points[0][0])+str(segment.points[0][1])
+#        endingNodeKey = str(segment.layer)+str(segment.points[1][0])+str(segment.points[1][1])
+#        if(pinsDict[startingNodeKey] != None):
+#            startingNode = pinsDict[startingNodeKey]
+#        else:
+#            startingNode = str(net.name) + ":" +  str(counter)
+#            counter += 1
+#            pinsDict[startingNodeKey] = startingNode
+#            
+#        if(pinsDict[endingNodeKey] != None):
+#            endingNode = pinsDict[endingNodeKey]
+#        else:    
+#            endingNode = str(net.name) + ":" +  str(counter)
+#            counter += 1
+#            pinsDict[endingNodeKey] = endingNode
+#        
+#        resistance = get_resistance(segment)
+#        capacitance = get_capacitance(segment)
+#        
+        
     counter = 1
     for segment in net.routed:
-        startingNodeKey = str(segment.layer)+str(segment.points[0][0])+str(segment.points[0][1])
-        endingNodeKey = str(segment.layer)+str(segment.points[1][0])+str(segment.points[1][1])
-        if(pinsDict[startingNodeKey] != None):
-            startingNode = pinsDict[startingNodeKey]
-        else:
-            startingNode = str(net.name) + ":" +  str(counter)
-            counter += 1
-            pinsDict[startingNodeKey] = startingNode
+        #startingNodeKey = str(segment.layer)+str(segment.points[0][0])+str(segment.points[0][1])
+        #endingNodeKey = str(segment.layer)+str(segment.points[1][0])+str(segment.points[1][1])
+        startingNode = []
+        endingNode = []
+        for i int pinstable:
+            if(segment.layer==i[0]):
+                if(i[1]<=segment.points[0][0]<=i[3] && i[2]<=segment.points[0][1]<=i[4]):
+                    startingNode = i
             
-        if(pinsDict[endingNodeKey] != None):
-            endingNode = pinsDict[endingNodeKey]
-        else:    
+            if(segment.layer==i[0]):
+                if(i[1]<=segment.points[1][0]<=i[3] && i[2]<=segment.points[1][1]<=i[4]):
+                    endingNode = i  
+                
+        if(len(startingNode == 0)):    
+            startingNode.append(str(segment.layer))
+            startingNode.append(segment.points[0][0])
+            startingNode.append(segment.points[0][1])
+            startingNode.append(segment.points[0][0])
+            startingNode.append(segment.points[0][1])
+            startingNode.append(str(net.name) + ":" +  str(counter))
+            counter += 1
+            pinstable.append(startingNode)
+        if(len(endingNode == 0):
             endingNode = str(net.name) + ":" +  str(counter)
             counter += 1
-            pinsDict[endingNodeKey] = endingNode
+            pinstable.append(endingNode)
         
         resistance = get_resistance(segment)
         capacitance = get_capacitance(segment)
+        
+        
         
     """
     newDictionary = {}
@@ -124,3 +159,7 @@ print(netsDict['_151_']['conn'])
 print(netsDict['_151_']['segments'])
 print(netsDict['_151_']['maxC'])
 '''
+
+
+
+
