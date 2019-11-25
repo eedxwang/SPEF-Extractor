@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 netsDict = {}
-pinsDict = {}
+pinsTable = []
 capCounter = {}
 capCounter[0] = 0
 resCounter = {}
 resCounter[0] = 0
+
 def getTotalCap(netsDict, wireName):
     maxC = 0
     segmentsList = netsDict[wireName]['segments']
@@ -68,18 +69,9 @@ print(netsDict['_151_']['conn'])
 print(netsDict['_151_']['segments'])
 print(netsDict['_151_']['maxC'])
 
-
-newDictionary = {}
-newDictionary['M'] = 'M1'
-newDictionary['x'] = 500
-newDictionary['y'] = 700
-newDictionary['name'] = 'inp:2'
-newDictionary['type'] = '*I'
-pinsDict['M1500700'] = newDictionary
-print(pinsDict)
-
-pinsDict['M1500700']['x'] = 700 #edit an item
-print(pinsDict)
+currentPin = ['M1', 500,700,1000,1000,'inp:2', '*I']
+pinsTable.append(currentPin)
+print(pinsTable[0])
 
 print(getMaxCap(netsDict, '_151_'))
 #printNet(netsDict, '_151_')
