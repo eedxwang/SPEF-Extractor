@@ -185,14 +185,17 @@ class DefParser:
 # Main Class
 if __name__ == '__main__':
     # read_path = "./libraries/DEF/c880_tri.def"
-    read_path = "./libraries/DEF/c2670_dq.def"
+    read_path = "./libraries/DEF/c1908.def"
     def_parser = DefParser(read_path)
     def_parser.parse()
 
     # for each_pin in def_parser.pins.pins:
     #     print (each_pin)
+    
+    for net in def_parser.nets:
+         print (net)
 
-    print (def_parser.to_def_format())
+    #print (def_parser.to_def_format())
 
     # test macro and via (note: only via1)
     # macro_dict = macro_and_via1(def_parser)
