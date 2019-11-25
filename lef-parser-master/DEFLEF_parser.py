@@ -111,13 +111,20 @@ for net in def_parser.nets:
             startingNode.append(str(net.name) + ":" +  str(counter))
             counter += 1
             pinstable.append(startingNode)
+            
         if(len(endingNode == 0):
-            endingNode = str(net.name) + ":" +  str(counter)
+            endingNode.append(str(segment.layer))
+            endingNode.append(segment.points[1][0])
+            endingNode.append(segment.points[1][1])
+            endingNode.append(segment.points[1][0])
+            endingNode.append(segment.points[1][1])
+            endingNode.append(str(net.name) + ":" +  str(counter))
             counter += 1
             pinstable.append(endingNode)
         
         resistance = get_resistance(segment)
         capacitance = get_capacitance(segment)
+        
         
         
         
