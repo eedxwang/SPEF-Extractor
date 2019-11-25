@@ -185,7 +185,7 @@ class DefParser:
 # Main Class
 if __name__ == '__main__':
     # read_path = "./libraries/DEF/c880_tri.def"
-    read_path = "./libraries/DEF/c1908.def"
+    """read_path = "./libraries/DEF/c1908.def"
     def_parser = DefParser(read_path)
     def_parser.parse()
 
@@ -194,7 +194,7 @@ if __name__ == '__main__':
     
     for net in def_parser.nets:
          print (net)
-
+"""
     #print (def_parser.to_def_format())
 
     # test macro and via (note: only via1)
