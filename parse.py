@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 netsDict = {}
-
+pinsDict = {}
 
 
 #def getMaxCap(netsDict):
@@ -9,7 +9,6 @@ netsDict = {}
     
     
     
-
 
 #conList = [['inp1', '*P', 'I'],['u1:a', '*I', 'I']]
 conList = []
@@ -35,3 +34,16 @@ print(netsDict['_151_'])
 print(netsDict['_151_']['conn'])
 print(netsDict['_151_']['segments'])
 print(netsDict['_151_']['maxC'])
+
+
+newDictionary = {}
+newDictionary['M'] = 'M1'
+newDictionary['x'] = 500
+newDictionary['y'] = 700
+newDictionary['name'] = 'inp:2'
+newDictionary['type'] = '*I'
+pinsDict['M1500700'] = newDictionary
+print(pinsDict)
+
+pinsDict['M1500700']['x'] = 700 #edit an item
+print(pinsDict)
