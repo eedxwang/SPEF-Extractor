@@ -26,6 +26,7 @@ class LefParser:
         self.statements = []
         self.cell_height = -1
 
+
     def get_cell_height(self):
         """
         Get the general cell height in the library

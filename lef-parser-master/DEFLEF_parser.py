@@ -16,6 +16,11 @@ def_parser.parse()
 
 netsDict = defaultdict(list)
     
+# l2d is the conversion factor between the scale in LEF and DEF
+# we need a function to generalize this for any two lef and def files
+l2d = 10
+
+
 # A function that takes an instance and a pin and returns a list of all
 # rectangles of that pin 
 def getPinLocation(instanceName, pinName, listOfPinRects):
@@ -23,17 +28,37 @@ def getPinLocation(instanceName, pinName, listOfPinRects):
     origin = def_parser.components.comp_dict[instanceName].placed
     orientation = def_parser.components.comp_dict[instanceName].orient
     cellType = def_parser.components.comp_dict[instanceName].macro
+    cellWidth= lef_parser.macro_dict[cellType].info['SIZE'][0] * l2d
+    cellHeight = lef_parser.macro_dict[cellType].info['SIZE'][1] * l2d
+    
+    pinObject = lef_parser.macro_dict[cellType].pin_dict[pinName]
+    port_info = pinObject.info['PORT'].info['LAYER'][0]
     
     if(orientation == 'N'):
-        pinObject = lef_parser.macro_dict[cellType].pin_dict[pinName]
-        port_info = pinObject.info['PORT'].info['LAYER'][0]
         for shape in port_info.shapes:
-            listOfPinRects.append((shape.points[0], shape.points[1]))
+            llx = shape.points[0][0]*l2d + origin[0]
+            lly = shape.points[0][1]*l2d + origin[1]
+            urx = shape.points[1][0]*l2d + origin[0]
+            ury = shape.points[1][1]*l2d + origin[1]
+            ll = (llx, lly)
+            ur = (urx, ury)
+            listOfPinRects.append((ll, ur))
+            
+    if(orientation == 'S'):
+        rotatedOrigin = (origin[0]+cellWidth, origin[1] + cellHeight)
+        for shape in port_info.shapes:
+            llx = rotatedOrigin[0] - shape.points[1][0]*l2d
+            lly = rotatedOrigin[0] - shape.points[1][1]*l2d
+            urx = rotatedOrigin[1] - shape.points[0][0]*l2d 
+            ury = rotatedOrigin[1] - shape.points[0][1]*l2d
+            ll = (llx, lly)
+            ur = (urx, ury)
+            listOfPinRects.append((ll, ur))
     
     
-
+# test the getPinLocationFunction
 listOfLocations = []
-getPinLocation('NAND2X1_3', 'Y', listOfLocations)
+getPinLocation('NOR2X1_1', 'A', listOfLocations)
 
 def get_resistance(segment):
     layer_name = segment.layer
