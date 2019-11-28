@@ -19,11 +19,21 @@ netsDict = defaultdict(list)
 # A function that takes an instance and a pin and returns a list of all
 # rectangles of that pin 
 def getPinLocation(instanceName, pinName, listOfPinRects):
+    #myInstance = def_parser.components.get_comp(instanceName)
     origin = def_parser.components.comp_dict[instanceName].placed
     orientation = def_parser.components.comp_dict[instanceName].orient
+    cellType = def_parser.components.comp_dict[instanceName].macro
     
-    #if(orient == 'N'):
-        
+    if(orientation == 'N'):
+        pinObject = lef_parser.macro_dict[cellType].pin_dict[pinName]
+        port_info = pinObject.info['PORT'].info['LAYER'][0]
+        for shape in port_info.shapes:
+            listOfPinRects.append((shape.points[0], shape.points[1]))
+    
+    
+
+listOfLocations = []
+getPinLocation('NAND2X1_3', 'Y', listOfLocations)
 
 def get_resistance(segment):
     layer_name = segment.layer
