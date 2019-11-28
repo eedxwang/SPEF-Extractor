@@ -115,7 +115,7 @@ def draw_cells():
     print ("Start drawing...")
     plt.show()
 
-
+"""
 # Main Class
 if __name__ == '__main__':
      
@@ -132,4 +132,4 @@ if __name__ == '__main__':
             print (each_shape.type)
 
 
-
+"""

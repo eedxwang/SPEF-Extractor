@@ -3,20 +3,28 @@ import def_parser
 import lef_parser
 from collections import defaultdict
 
-path = "./libraries/Nangate/NangateOpenCellLibrary.lef"
+# We had to modify the lef parser to ignore the second parameter for the offset
+# since our files provide only 1 value
+path = "osu035.lef"
 lef_parser = LefParser(path)
 lef_parser.parse()
 
 
-read_path = "./libraries/DEF/c1908.def"
+read_path = "uart.def"
 def_parser = DefParser(read_path)
 def_parser.parse()
 
 netsDict = defaultdict(list)
-
-for pin in def_parser.pins:
-    print(pin)
     
+# A function that takes an instance and a pin and returns a list of all
+# rectangles of that pin 
+def getPinLocation(instanceName, pinName, listOfPinRects):
+    origin = def_parser.components.comp_dict[instanceName].placed
+    orientation = def_parser.components.comp_dict[instanceName].orient
+    
+    #if(orient == 'N'):
+        
+
 def get_resistance(segment):
     layer_name = segment.layer
     rPerSquare = lef_parser.layer_dict[layer_name].resistance[1]
@@ -86,14 +94,14 @@ for net in def_parser.nets:
 #        resistance = get_resistance(segment)
 #        capacitance = get_capacitance(segment)
 #        
-        
+    """   
     counter = 1
     for segment in net.routed:
         #startingNodeKey = str(segment.layer)+str(segment.points[0][0])+str(segment.points[0][1])
         #endingNodeKey = str(segment.layer)+str(segment.points[1][0])+str(segment.points[1][1])
         startingNode = []
         endingNode = []
-        for i int pinstable:
+        for i int pinsTable:
             if(segment.layer==i[0]):
                 if(i[1]<=segment.points[0][0]<=i[3] && i[2]<=segment.points[0][1]<=i[4]):
                     startingNode = i
@@ -110,7 +118,7 @@ for net in def_parser.nets:
             startingNode.append(segment.points[0][1])
             startingNode.append(str(net.name) + ":" +  str(counter))
             counter += 1
-            pinstable.append(startingNode)
+            pinsTable.append(startingNode)
             
         if(len(endingNode == 0):
             endingNode.append(str(segment.layer))
@@ -120,11 +128,11 @@ for net in def_parser.nets:
             endingNode.append(segment.points[1][1])
             endingNode.append(str(net.name) + ":" +  str(counter))
             counter += 1
-            pinstable.append(endingNode)
+            pinsTable.append(endingNode)
         
         resistance = get_resistance(segment)
         capacitance = get_capacitance(segment)
-        
+       """ 
         
         
         
