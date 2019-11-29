@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import def_parser
-import lef_parser
+import def_parser 
+import lef_parser 
 from collections import defaultdict
 
 # We had to modify the lef parser to ignore the second parameter for the offset
@@ -140,22 +140,30 @@ getPinLocation('NOR2X1_1', 'A', listOfLocations)
 
 def get_resistance(segment):
     layer_name = segment.layer
-    rPerSquare = lef_parser.layer_dict[layer_name].resistance[1]
-    width = lef_parser.layer_dict[layer_name].width
-    length = abs(segment.points[0][0] - segment.points[1][0]) + abs(segment.points[0][1] - segment.points[1][1]) 
-    resistance = length * rPerSquare / width
+    if(len(segment.points)>1):
+        rPerSquare = lef_parser.layer_dict[layer_name].resistance[1]
+        width = lef_parser.layer_dict[layer_name].width
+        length = abs(segment.points[0][0] - segment.points[1][0]) + abs(segment.points[0][1] - segment.points[1][1]) 
+        resistance = length * rPerSquare / width
+    #handelling a VIA, is there's only one coordinate for a segment then it's a via
+    elif(len(segment.points) == 1):
+            resistance = lef_parser.layer_dict[layer_name].resistance[1]
     return resistance
     
 def get_capacitance(segment):
     layer_name = segment.layer
-    cPerSquare = lef_parser.layer_dict[layer_name].capacitance[1]
-    width = lef_parser.layer_dict[layer_name].width
-    length = abs(segment.points[0][0] - segment.points[1][0]) + abs(segment.points[0][1] - segment.points[1][1])
-    if(lef_parser.layer_dict[layer_name].edge_cap != None):
-        edgeCapacitance = lef_parser.layer_dict[layer_name].edge_cap
-    else:
-        edgeCapacitance = 0
-    capacitance = length * cPerSquare * width + edgeCapacitance * length
+    if(len(segment.points)>1):
+        cPerSquare = lef_parser.layer_dict[layer_name].capacitance[1]
+        width = lef_parser.layer_dict[layer_name].width
+        length = abs(segment.points[0][0] - segment.points[1][0]) + abs(segment.points[0][1] - segment.points[1][1])
+        if(lef_parser.layer_dict[layer_name].edge_cap != None):
+            edgeCapacitance = lef_parser.layer_dict[layer_name].edge_cap
+        else:
+            edgeCapacitance = 0
+        capacitance = length * cPerSquare * width + edgeCapacitance * length
+    #handelling a VIA
+    elif(len(segment.points) == 1):
+        capacitance = lef_parser.layer_dict[layer_name].capacitance[1]
     return capacitance
     
 for net in def_parser.nets:
@@ -221,45 +229,49 @@ for net in def_parser.nets:
 #        resistance = get_resistance(segment)
 #        capacitance = get_capacitance(segment)
 #        
-    """   
+     
     counter = 1
     for segment in net.routed:
         #startingNodeKey = str(segment.layer)+str(segment.points[0][0])+str(segment.points[0][1])
         #endingNodeKey = str(segment.layer)+str(segment.points[1][0])+str(segment.points[1][1])
         startingNode = []
         endingNode = []
-        for i int pinsTable:
+       # print(segment)
+        for i in pinsTable:
             if(segment.layer==i[0]):
-                if(i[1]<=segment.points[0][0]<=i[3] && i[2]<=segment.points[0][1]<=i[4]):
+                if(i[1]<=segment.points[0][0]<=i[3] and i[2]<=segment.points[0][1]<=i[4]):
                     startingNode = i
             
             if(segment.layer==i[0]):
-                if(i[1]<=segment.points[1][0]<=i[3] && i[2]<=segment.points[1][1]<=i[4]):
+                if(i[1]<=segment.points[1][0]<=i[3] and i[2]<=segment.points[1][1]<=i[4]):
                     endingNode = i  
                 
-        if(len(startingNode == 0)):    
+        if(len(startingNode) == 0):    
+            startingNode.append(segment.points[0][0])
+            startingNode.append(segment.points[0][1])
+            startingNode.append(segment.points[0][0])
+            startingNode.append(segment.points[0][1])
             startingNode.append(str(segment.layer))
-            startingNode.append(segment.points[0][0])
-            startingNode.append(segment.points[0][1])
-            startingNode.append(segment.points[0][0])
-            startingNode.append(segment.points[0][1])
             startingNode.append(str(net.name) + ":" +  str(counter))
             counter += 1
             pinsTable.append(startingNode)
-            
-        if(len(endingNode == 0):
-            endingNode.append(str(segment.layer))
-            endingNode.append(segment.points[1][0])
-            endingNode.append(segment.points[1][1])
-            endingNode.append(segment.points[1][0])
-            endingNode.append(segment.points[1][1])
-            endingNode.append(str(net.name) + ":" +  str(counter))
-            counter += 1
-            pinsTable.append(endingNode)
         
+        if(len(endingNode) == 0):
+            if(len(segment.points)>1): #if not a VIA
+                endingNode.append(segment.points[1][0])
+                endingNode.append(segment.points[1][1])
+                endingNode.append(segment.points[1][0])
+                endingNode.append(segment.points[1][1])
+                endingNode.append(str(segment.layer))
+                endingNode.append(str(net.name) + ":" +  str(counter))
+                counter += 1
+                pinsTable.append(endingNode)
+            """
+            else THIS IS A VIA, HANDEL VIAS
+            """
         resistance = get_resistance(segment)
         capacitance = get_capacitance(segment)
-       """ 
+        
         
         
         
