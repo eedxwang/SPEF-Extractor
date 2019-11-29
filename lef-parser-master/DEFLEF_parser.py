@@ -76,10 +76,62 @@ def getPinLocation(instanceName, pinName, listOfPinRects):
             ulx = rotatedOrigin[0] + shape.points[0][1]*l2d
             uly = rotatedOrigin[1] - shape.points[0][0]*l2d
             lrx = rotatedOrigin[0] + shape.points[1][1]*l2d 
-            uly = rotatedOrigin[1] - shape.points[1][0]*l2d
+            lry = rotatedOrigin[1] - shape.points[1][0]*l2d
             
             ll = (ulx, lry)
             ur = (lrx, uly)
+            listOfPinRects.append((ll, ur))
+            
+    if(orientation == 'FN'):
+        # consider origin to be bottom right corner
+        rotatedOrigin = (origin[0]+cellWidth, origin[1])
+        for shape in port_info.shapes:
+            lrx = rotatedOrigin[0] - shape.points[0][0]*l2d 
+            lry = rotatedOrigin[1] + shape.points[0][1]*l2d
+            ulx = rotatedOrigin[0] - shape.points[1][0]*l2d
+            uly = rotatedOrigin[1] + shape.points[1][1]*l2d  
+            
+            ll = (ulx, lry)
+            ur = (lrx, uly)
+            listOfPinRects.append((ll, ur))
+            
+    if(orientation == 'FS'):
+        # consider origin to be upper left corner
+        rotatedOrigin = (origin[0], origin[1]+cellHeight)
+        for shape in port_info.shapes:
+            lrx = rotatedOrigin[0] + shape.points[1][0]*l2d 
+            lry = rotatedOrigin[1] - shape.points[1][1]*l2d
+            ulx = rotatedOrigin[0] + shape.points[0][0]*l2d
+            uly = rotatedOrigin[1] - shape.points[0][1]*l2d  
+            
+            ll = (ulx, lry)
+            ur = (lrx, uly)
+            listOfPinRects.append((ll, ur))
+            
+    if(orientation == 'FW'):
+        # consider origin to be bottom left corner
+        rotatedOrigin = (origin[0], origin[1])
+        for shape in port_info.shapes:
+            llx = rotatedOrigin[0] + shape.points[0][1]*l2d 
+            lly = rotatedOrigin[1] + shape.points[0][0]*l2d
+            urx = rotatedOrigin[0] + shape.points[1][1]*l2d
+            ury = rotatedOrigin[1] + shape.points[1][0]*l2d  
+            
+            ll = (llx, lly)
+            ur = (urx, ury)
+            listOfPinRects.append((ll, ur))
+            
+    if(orientation == 'FE'):
+        # consider origin to be top right corner
+        rotatedOrigin = (origin[0] + cellHeight, origin[1] + cellWidth)
+        for shape in port_info.shapes:
+            llx = rotatedOrigin[0] - shape.points[1][1]*l2d 
+            lly = rotatedOrigin[1] - shape.points[1][0]*l2d
+            urx = rotatedOrigin[0] - shape.points[0][1]*l2d
+            ury = rotatedOrigin[1] - shape.points[0][0]*l2d  
+            
+            ll = (llx, lly)
+            ur = (urx, ury)
             listOfPinRects.append((ll, ur))
     
 # test the getPinLocationFunction
