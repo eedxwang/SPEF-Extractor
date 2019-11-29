@@ -15,7 +15,7 @@ def_parser = DefParser(read_path)
 def_parser.parse()
 
 netsDict = defaultdict(list)
-    
+pinsTable = []
 # l2d is the conversion factor between the scale in LEF and DEF
 # we need a function to generalize this for any two lef and def files
 l2d = 10
@@ -164,6 +164,7 @@ for net in def_parser.nets:
     for con in net.comp_pin:
         #check if pin is *P
         current_pin = []
+        locationsOfCurrentPin = []
         if(con[0] == "PIN"):
             current_pin.append("*P")
             current_pin.append(con[1])
@@ -172,6 +173,12 @@ for net in def_parser.nets:
                 current_pin.append("I")
             else:
                 current_pin.append("O")
+                
+            # these are used for the pinsTable
+            pinLocation = def_parser.pins.pin_dict[con[1]].placed
+            metalLayer = def_parser.pins.pin_dict[con[1]].layer.name
+            locationsOfCurrentPin.append(pinLocation)
+            
             
         else:
             current_pin.append("*I")
@@ -182,7 +189,14 @@ for net in def_parser.nets:
                 current_pin.append("I")
             else:
                 current_pin.append("O")
-                
+            
+            #this is used for the pins table
+            getPinLocation(con[0], con[1], locationsOfCurrentPin)
+            metalLayerInfo = lef_parser.macro_dict[cell_type].pin_dict[con[1]].info
+            metalLayer = metalLayerInfo['PORT'].info['LAYER'][0].name
+       
+        # we addpend list of pin locations - cellName - pinName - metalLayer
+        pinsTable.append((locationsOfCurrentPin, con[0], con[1],metalLayer))
         conList.append(current_pin)
         
     # generate the Resistance and Capacitances data structure
