@@ -200,9 +200,10 @@ def checkPinsTable(segment, i):
 
 
 
-
+BigTable=[]
 for net in def_parser.nets:
     conList = []
+    pinsTable=[]
     # generate the conn data structure for conn section
     for con in net.comp_pin:
         #check if pin is *P
@@ -293,7 +294,7 @@ for net in def_parser.nets:
                     
             resistance = get_resistance(segment)
             capacitance = get_capacitance(segment)
-
+    BigTable.append(pinsTable)
       
         
  
