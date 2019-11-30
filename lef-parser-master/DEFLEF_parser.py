@@ -200,7 +200,8 @@ def checkPinsTable(segment, i):
 
 
 
-BigTable=[]
+bigTable={}
+
 for net in def_parser.nets:
     conList = []
     pinsTable=[]
@@ -294,7 +295,7 @@ for net in def_parser.nets:
                     
             resistance = get_resistance(segment)
             capacitance = get_capacitance(segment)
-    BigTable.append(pinsTable)
+    bigTable[net.name] = pinsTable
       
         
  
