@@ -20,7 +20,7 @@ pinsTable = []
 
 # l2d is the conversion factor between the scale in LEF and DEF
 # we need a function to generalize this for any two lef and def files
-l2d = 10
+l2d = 100
 
 
 # A function that takes an instance and a pin and returns a list of all
@@ -176,24 +176,17 @@ def checkPinsTable(segment, i):
                 for f in i[0]:    
                     if(str(type(f[0])) != "<class 'int'>"):
                         if ((f[0][0] <= float(k[0]) <= f[1][0]) and (f[0][1] <= float(k[1]) <= f[1][1])):
-                            if(k == segment.points[0]):
-                                return "start"
-                            else:
-                                return "end"
+                            return "exist"
                         else: return "new"
                     else: 
                         if(k[0]==f[0] and k[1]==f[1]):
                             if(k == segment.points[0]):
-                                return "start"
-                            else:
-                                return "end"
+                                return "exist"
                         else: return "new"
             else:
                 if(k[0]==i[0][0] and k[1]==i[0][1]):
                     if(k == segment.points[0]):
-                        return "start"
-                    else:
-                        return "end"
+                        return "exist"
                 else: return "new"
     else: 
         return "new"
@@ -246,54 +239,76 @@ for net in def_parser.nets:
     counter = 1
     for segment in net.routed:
         startingNode = []
-        endingNode = []
 
         for i in pinsTable:
             flag=checkPinsTable(segment, i)
-            if (flag == "start"):
+            if (flag == "exist"):
                 startingNode = i
-            elif (flag == "end"):
-                endingNode = i
                 
-        if (flag == "new"):
-            if(len(startingNode) == 0 ):  
+        if (flag == "new" and len(startingNode) == 0 ):
+            for i in segment.points:
+                startingNode = []
                 if(len(segment.points)>1):
-                    startingNode.append(segment.points[0])
+                    startingNode.append(i)
                     startingNode.append(str(net.name) )
                     startingNode.append(":" +  str(counter))
                     startingNode.append(str(segment.layer))
                     counter += 1
                     pinsTable.append(startingNode)
-            
-            if(len(endingNode) == 0):
-                if(len(segment.points)>1): #if a wrie segment with or without VIA
-                    endingNode.append(segment.points[1])
-                    endingNode.append(str(net.name))
-                    endingNode.append(":" +  str(counter))
-                    endingNode.append(str(segment.layer))
-                    counter += 1
-                    pinsTable.append(endingNode)
-                    if(segment.end_via != ';' and segment.end_via != None):  #Handeling Vias at the end of segments 
-                        endingNode = []
-                        endingNode.append(segment.points[1])
-                        endingNode.append(str(net.name))
-                        endingNode.append(":" +  str(counter))
-                        endingNode.append(str(segment.end_via))
+                    if((segment.end_via != ';' and segment.end_via != None) and counter ==len(segment.points)):  #Handeling Vias at the end of segments 
+                        startingNode = []
+                        startingNode.append(i)
+                        startingNode.append(str(net.name))
+                        startingNode.append(":" +  str(counter))
+                        startingNode.append(str(segment.end_via))
                         counter += 1
-                        pinsTable.append(endingNode)
-
-                        
-            if(len(segment.points) == 1 and (len(endingNode) == 0)): 
-                #Handeling independent VIAs
-                endingNode.append(segment.points[0])
-                endingNode.append(str(net.name))
-                endingNode.append(":" +  str(counter))
-                endingNode.append(str(segment.end_via))
-                counter += 1
-                pinsTable.append(endingNode)
+                        pinsTable.append(startingNode)
+                elif(len(segment.points) == 1):
+                    startingNode.append(i)
+                    startingNode.append(str(net.name))
+                    startingNode.append(":" +  str(counter))
+                    startingNode.append(str(segment.end_via))
+                    counter += 1
+                    pinsTable.append(startingNode)
                     
-            resistance = get_resistance(segment)
-            capacitance = get_capacitance(segment)
+#            if(len(startingNode) == 0 ):  
+#                if(len(segment.points)>1):
+#                    startingNode.append(segment.points[0])
+#                    startingNode.append(str(net.name) )
+#                    startingNode.append(":" +  str(counter))
+#                    startingNode.append(str(segment.layer))
+#                    counter += 1
+#                    pinsTable.append(startingNode)
+#            
+#            if(len(endingNode) == 0):
+#                if(len(segment.points)>1): #if a wrie segment with or without VIA
+#                    endingNode.append(segment.points[1])
+#                    endingNode.append(str(net.name))
+#                    endingNode.append(":" +  str(counter))
+#                    endingNode.append(str(segment.layer))
+#                    counter += 1
+#                    pinsTable.append(endingNode)
+#                    if(segment.end_via != ';' and segment.end_via != None):  #Handeling Vias at the end of segments 
+#                        endingNode = []
+#                        endingNode.append(segment.points[1])
+#                        endingNode.append(str(net.name))
+#                        endingNode.append(":" +  str(counter))
+#                        endingNode.append(str(segment.end_via))
+#                        counter += 1
+#                        pinsTable.append(endingNode)
+#
+#                        
+#            if(len(segment.points) == 1 and (len(endingNode) == 0)): 
+#                #Handeling independent VIAs
+#                endingNode.append(segment.points[0])
+#                endingNode.append(str(net.name))
+#                endingNode.append(":" +  str(counter))
+#                endingNode.append(str(segment.end_via))
+#                counter += 1
+#                pinsTable.append(endingNode)
+                    
+        resistance = get_resistance(segment)
+        capacitance = get_capacitance(segment)
     BigTable.append(pinsTable)
       
         
