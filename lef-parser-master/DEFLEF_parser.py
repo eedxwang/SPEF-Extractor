@@ -20,7 +20,7 @@ pinsTable = []
 
 # l2d is the conversion factor between the scale in LEF and DEF
 # we need a function to generalize this for any two lef and def files
-l2d = 1000
+l2d = 10
 
 
 # A function that takes an instance and a pin and returns a list of all
@@ -140,33 +140,35 @@ def getPinLocation(instanceName, pinName, listOfPinRects):
 listOfLocations = []
 getPinLocation('NOR2X1_1', 'A', listOfLocations)
 
-def get_resistance(segment):
-    layer_name = segment.layer
-    if(len(segment.points)>1):
+def get_resistance(points, points2, segment):
+    layer_name = segment
+    if(points != points2):
         rPerSquare = lef_parser.layer_dict[layer_name].resistance[1]
         width = lef_parser.layer_dict[layer_name].width
-        length = abs(segment.points[0][0] - segment.points[1][0]) + abs(segment.points[0][1] - segment.points[1][1]) 
+        length = abs(points[0] - points2[1]) + abs(points[0] - points2[1]) 
         resistance = length * rPerSquare / width
+        return resistance
     #handelling a VIA, is there's only one coordinate for a segment then it's a via
-    elif(len(segment.points) == 1):
-            resistance = lef_parser.layer_dict[layer_name].resistance[1]
-    return resistance
+#    else:
+#        resistance = lef_parser.via_dict[layer_name].resistance[1]
     
-def get_capacitance(segment):
-    layer_name = segment.layer
-    if(len(segment.points)>1):
+    
+def get_capacitance(points, points2, segment):
+    layer_name = segment
+    if(points != points2):
         cPerSquare = lef_parser.layer_dict[layer_name].capacitance[1]
         width = lef_parser.layer_dict[layer_name].width
-        length = abs(segment.points[0][0] - segment.points[1][0]) + abs(segment.points[0][1] - segment.points[1][1])
+        length = abs(points[0] - points2[1]) + abs(points[0] - points2[1]) 
         if(lef_parser.layer_dict[layer_name].edge_cap != None):
             edgeCapacitance = lef_parser.layer_dict[layer_name].edge_cap
         else:
             edgeCapacitance = 0
         capacitance = length * cPerSquare * width + edgeCapacitance * length
+        return capacitance
     #handelling a VIA
-    elif(len(segment.points) == 1):
-        capacitance = lef_parser.layer_dict[layer_name].capacitance[1]
-    return capacitance
+#    else:
+#        capacitance = lef_parser.via_dict[layer_name].capacitance[1]
+    
     
 
 def checkPinsTable(point, layer, pinsTable): 
@@ -191,7 +193,7 @@ def checkPinsTable(point, layer, pinsTable):
             flag= "new"
     return flag
 
-
+segmentsList = []
 bigTable={}
 
 for net in def_parser.nets:
@@ -237,43 +239,74 @@ for net in def_parser.nets:
         conList.append(current_pin)
 
     counter = 1
-    c2=1
+    
     for segment in net.routed:
-        startingNode = []
+        node = []
+        c2=0
         for i in segment.points:
             flag=checkPinsTable(i, segment.layer, pinsTable)
             if( flag != "new"):
-                startingNode = flag
-                print("there" + str(flag))
+                node = flag
             else:
-                startingNode = []
+                node = []
                 if(len(segment.points)>1):
-                    startingNode.append(i)
-                    startingNode.append(str(net.name) )
-                    startingNode.append(":" +  str(counter))
-                    startingNode.append(str(segment.layer))
+                    node.append(i)
+                    node.append(str(net.name) )
+                    node.append(":" +  str(counter))
+                    node.append(str(segment.layer))
                     counter += 1
-                    pinsTable.append(startingNode)
+                    c2 += 1
+                    if( c2>1 ):
+                        seg=[]
+                        prev = pinsTable[len(pinsTable)-1]
+                        resistance = get_resistance(prev[0], i, segment.layer)
+                        capacitance = get_capacitance(prev[0], i, segment.layer)
+                        seg.append(prev[1]+prev[2])
+                        seg.append(node[1] + node[2])
+                        seg.append(resistance)
+                        seg.append(capacitance)
+                        segmentsList.append(seg)
+                    pinsTable.append(node)
+                    
+                    
                     if((segment.end_via != ';' and segment.end_via != None) and i ==segment.points[len(segment.points)-1]):  #Handeling Vias at the end of segments 
-                        startingNode = []
-                        startingNode.append(i)
-                        startingNode.append(str(net.name))
-                        startingNode.append(":" +  str(counter))
-                        startingNode.append(str(segment.end_via))
+                        node = []
+                        seg=[]
+                        node.append(i)
+                        node.append(str(net.name))
+                        node.append(":" +  str(counter))
+                        if(segment.end_via[len(segment.end_via)-1]==';'):
+                            segment.end_via = segment.end_via.replace(';','')
+                        node.append(str(segment.end_via))
                         counter += 1
-                        pinsTable.append(startingNode)
+                        resistance = get_resistance(i, i, segment.end_via)
+                        capacitance = get_capacitance(i, i, segment.end_via)
+                        seg.append(node[1] +node[2])
+                        seg.append(node[1] +node[2])
+                        seg.append(resistance)
+                        seg.append(capacitance)
+                        segmentsList.append(seg)
+                        pinsTable.append(node)
+                       
                 elif(len(segment.points) == 1):
-                    startingNode.append(i)
-                    startingNode.append(str(net.name))
-                    startingNode.append(":" +  str(counter))
-                    startingNode.append(str(segment.end_via))
+                    seg=[]
+                    node.append(i)
+                    node.append(str(net.name))
+                    node.append(":" +  str(counter))
+                    node.append(str(segment.end_via))
                     counter += 1
-                    pinsTable.append(startingNode)
+                    resistance = get_resistance(i, i, segment.end_via)
+                    capacitance = get_capacitance(i, i, segment.end_via)
+                    seg.append(node[1] +node[2])
+                    seg.append(node[1] +node[2])
+                    seg.append(resistance)
+                    seg.append(capacitance)
+                    segmentsList.append(seg)
+                    pinsTable.append(node)
+                    
                     
 
                     
-        resistance = get_resistance(segment)
-        capacitance = get_capacitance(segment)
     bigTable[net.name] = pinsTable
       
         
@@ -294,7 +327,7 @@ for net in def_parser.nets:
     
     
     
-segmentsList = []
+
 segmentsList.append(['inp1','inp1:1', 1.4,3.4])
 segmentsList.append(['inp1:1','inp1:2', 1.4,3.5])
 segmentsList.append(['inp1:2','u1:a', 1.5,3.6])
