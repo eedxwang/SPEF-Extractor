@@ -73,7 +73,7 @@ currentPin = ['M1', 500,700,1000,1000,'inp:2', '*I']
 pinsTable.append(currentPin)
 print(pinsTable[0])
 
-print(getMaxCap(netsDict, '_151_'))
+print(getTotalCap(netsDict, '_151_'))
 #printNet(netsDict, '_151_')
 
 
