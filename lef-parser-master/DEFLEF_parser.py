@@ -20,7 +20,7 @@ pinsTable = []
 
 # l2d is the conversion factor between the scale in LEF and DEF
 # we need a function to generalize this for any two lef and def files
-l2d = 100
+l2d = 1000
 
 
 # A function that takes an instance and a pin and returns a list of all
@@ -169,28 +169,27 @@ def get_capacitance(segment):
     return capacitance
     
 
-def checkPinsTable(segment, i): 
-    if(segment.layer == i[3]):
-        for k in segment.points:
-            if(str(type(i[0][0])) != "<class 'int'>"):
-                for f in i[0]:    
-                    if(str(type(f[0])) != "<class 'int'>"):
-                        if ((f[0][0] <= float(k[0]) <= f[1][0]) and (f[0][1] <= float(k[1]) <= f[1][1])):
-                            return "exist"
-                        else: return "new"
-                    else: 
-                        if(k[0]==f[0] and k[1]==f[1]):
-                            if(k == segment.points[0]):
-                                return "exist"
-                        else: return "new"
-            else:
-                if(k[0]==i[0][0] and k[1]==i[0][1]):
-                    if(k == segment.points[0]):
-                        return "exist"
-                else: return "new"
-    else: 
-        return "new"
-
+def checkPinsTable(point, layer, pinsTable): 
+    flag= "new"
+    for j in pinsTable:
+        if(layer == j[3]):
+                if(str(type(j[0][0])) != "<class 'int'>"):
+                    for f in j[0]:    
+                        if(str(type(f[0])) != "<class 'int'>"):
+                            if ((f[0][0] <= float(point[0]) <= f[1][0]) and (f[0][1] <= float(point[1]) <= f[1][1])):
+                                flag= j
+                            else: flag= "new"
+                        else: 
+                            if(point[0]==f[0] and point[1]==f[1]):
+                                    flag= j
+                            else: flag= "new"
+                else:
+                    if(point[0]==j[0][0] and point[1]==j[0][1]):
+                            flag= j
+                    else: flag= "new"
+        else: 
+            flag= "new"
+    return flag
 
 
 bigTable={}
@@ -238,16 +237,15 @@ for net in def_parser.nets:
         conList.append(current_pin)
 
     counter = 1
+    c2=1
     for segment in net.routed:
         startingNode = []
-
-        for i in pinsTable:
-            flag=checkPinsTable(segment, i)
-            if (flag == "exist"):
-                startingNode = i
-                
-        if (flag == "new" and len(startingNode) == 0 ):
-            for i in segment.points:
+        for i in segment.points:
+            flag=checkPinsTable(i, segment.layer, pinsTable)
+            if( flag != "new"):
+                startingNode = flag
+                print("there" + str(flag))
+            else:
                 startingNode = []
                 if(len(segment.points)>1):
                     startingNode.append(i)
