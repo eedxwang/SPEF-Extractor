@@ -11,7 +11,7 @@ lef_parser = LefParser(path)
 lef_parser.parse()
 
 
-read_path = "uart.def"
+read_path = "bcd_routed.def"
 def_parser = DefParser(read_path)
 def_parser.parse()
 
