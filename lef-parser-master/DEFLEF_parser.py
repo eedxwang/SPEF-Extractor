@@ -247,6 +247,7 @@ for net in def_parser.nets:
             flag=checkPinsTable(i, segment.layer, pinsTable)
             if( flag != "new"):
                 node = flag
+                #TODO: ADD HANDLING NODES THAT ALREADY EXIST
             else:
                 node = []
                 if(len(segment.points)>1):
