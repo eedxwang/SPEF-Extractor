@@ -169,6 +169,31 @@ def get_capacitance(points, points2, segment):
 #    else:
 #        capacitance = lef_parser.via_dict[layer_name].capacitance[1]
     
+def get_resistance_modified(point1, point2, layer_name): #point is a list of (x, y)
+    if(point1 == point2): #we have a via
+        #Parse Via related data
+        return 0
+    else: #we have a wire
+        rPerSquare = lef_parser.layer_dict[layer_name].resistance[1]
+        width = lef_parser.layer_dict[layer_name].width
+        wire_len = abs(point1[0] - point2[0]) + abs(point1[1] - point2[1])
+        resistance = wire_len * rPerSquare / width
+        return resistance
+
+def get_capacitance_modified(point1, point2, layer_name): #point is a list of (x, y)
+    if(point1 == point2): #we have a via
+        #Parse Via related data
+        return 0
+    else: #we have a wire
+        cPerSquare = lef_parser.layer_dict[layer_name].capacitance[1]
+        width = lef_parser.layer_dict[layer_name].width
+        length = abs(point1[0] - point2[0]) + abs(point1[1] - point2[1]) 
+        if(lef_parser.layer_dict[layer_name].edge_cap != None):
+            edgeCapacitance = lef_parser.layer_dict[layer_name].edge_cap
+        else:
+            edgeCapacitance = 0
+        capacitance = length * cPerSquare * width + edgeCapacitance * length
+        return capacitance
     
 
 def checkPinsTable(point, layer, pinsTable): 
