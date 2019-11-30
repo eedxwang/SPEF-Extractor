@@ -351,7 +351,8 @@ class Layer(Statement):
         elif data[0] == "DIRECTION":
             self.direction = data[1]
         elif data[0] == "OFFSET":
-            self.offset = (float(data[1]), float(data[2]))
+            self.offset = (float(data[1]))
+            #self.offset = (float(data[1]), float(data[2]))
         elif data[0] == "RESISTANCE":
             if self.layer_type == "ROUTING":
                 self.resistance = (data[1], float(data[2]))

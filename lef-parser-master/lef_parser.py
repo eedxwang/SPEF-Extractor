@@ -26,6 +26,7 @@ class LefParser:
         self.statements = []
         self.cell_height = -1
 
+
     def get_cell_height(self):
         """
         Get the general cell height in the library
@@ -115,7 +116,7 @@ def draw_cells():
     print ("Start drawing...")
     plt.show()
 
-
+"""
 # Main Class
 if __name__ == '__main__':
      
@@ -132,4 +133,4 @@ if __name__ == '__main__':
             print (each_shape.type)
 
 
-
+"""

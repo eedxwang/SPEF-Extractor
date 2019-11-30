@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from def_parser import *
 from lef_parser import *
+
 from collections import defaultdict
 
 # We had to modify the lef parser to ignore the second parameter for the offset
@@ -20,6 +21,7 @@ pinsTable = []
 # l2d is the conversion factor between the scale in LEF and DEF
 # we need a function to generalize this for any two lef and def files
 l2d = 10
+
 
 # A function that takes an instance and a pin and returns a list of all
 # rectangles of that pin 
@@ -240,14 +242,11 @@ for net in def_parser.nets:
         pinsTable.append((locationsOfCurrentPin, con[0], con[1],metalLayer))
         conList.append(current_pin)
 
-
-
-
-
     counter = 1
     for segment in net.routed:
         startingNode = []
         endingNode = []
+
         for i in pinsTable:
             flag=checkPinsTable(segment, i)
             if (flag == "start"):
@@ -294,11 +293,14 @@ for net in def_parser.nets:
                     
             resistance = get_resistance(segment)
             capacitance = get_capacitance(segment)
+
+      
         
  
 
 
     
+        
         
         
     """

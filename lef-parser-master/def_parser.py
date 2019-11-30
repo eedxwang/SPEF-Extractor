@@ -183,7 +183,7 @@ class DefParser:
 
 
 # Main Class
-if __name__ == '__main__':
+#if __name__ == '__main__':
     # read_path = "./libraries/DEF/c880_tri.def"
     """read_path = "./libraries/DEF/c1908.def"
     def_parser = DefParser(read_path)
