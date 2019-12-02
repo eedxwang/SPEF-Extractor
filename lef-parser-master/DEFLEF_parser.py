@@ -15,7 +15,7 @@ read_path = "uart.def"
 def_parser = DefParser(read_path)
 def_parser.parse()
 
-netsDict = defaultdict(list)
+#netsDict = defaultdict(list)
 pinsTable = []
 
 # l2d is the conversion factor between the scale in LEF and DEF
@@ -140,17 +140,6 @@ def getPinLocation(instanceName, pinName, listOfPinRects):
 listOfLocations = []
 getPinLocation('NOR2X1_1', 'A', listOfLocations)
 
-def get_resistance(points, points2, segment):
-    layer_name = segment
-    if(points != points2):
-        rPerSquare = lef_parser.layer_dict[layer_name].resistance[1]
-        width = lef_parser.layer_dict[layer_name].width
-        length = abs(points[0] - points2[1]) + abs(points[0] - points2[1]) 
-        resistance = length * rPerSquare / width
-        return resistance
-    #handelling a VIA, is there's only one coordinate for a segment then it's a via
-#    else:
-#        resistance = lef_parser.via_dict[layer_name].resistance[1]
     
 
 def getViaType(via):
@@ -168,22 +157,6 @@ def getViaType(via):
     return via_type
                  
    
-def get_capacitance(points, points2, segment):
-    layer_name = segment
-    if(points != points2):
-        cPerSquare = lef_parser.layer_dict[layer_name].capacitance[1]
-        width = lef_parser.layer_dict[layer_name].width
-        length = abs(points[0] - points2[1]) + abs(points[0] - points2[1]) 
-        if(lef_parser.layer_dict[layer_name].edge_cap != None):
-            edgeCapacitance = lef_parser.layer_dict[layer_name].edge_cap
-        else:
-            edgeCapacitance = 0
-        capacitance = length * cPerSquare * width + edgeCapacitance * length
-        return capacitance
-    #handelling a VIA
-#    else:
-#        capacitance = lef_parser.via_dict[layer_name].capacitance[1]
-    
 def get_resistance_modified(point1, point2, layer_name, via_type): #point is a list of (x, y)
     if(point1 == point2): #we have a via
         return lef_parser.layer_dict[via_type].resistance
@@ -243,6 +216,7 @@ segmentsList = []
 bigPinsTable={}
 bigSegmentsTable = {}
 bigCapacitanceTable = {}
+netsDict = {}
 
 for net in def_parser.nets:
     conList = []
@@ -406,11 +380,21 @@ for net in def_parser.nets:
             seg.append(resistance)
             seg.append(capacitance)
             segmentsList.append(seg)
-                    
+    
+                 
     bigPinsTable[net.name] = pinsTable
     bigSegmentsTable[net.name] = segmentsList
     bigCapacitanceTable[net.name] = currentNodeList
-        
+    
+    
+    sumC=0 
+    lists= {}  
+    for k in currentNodeList:
+        sumC+=currentNodeList[k]
+    lists["conn"]=conList
+    lists['segments']=segmentsList
+    lists['sumCap']=sumC
+    netsDict[net.name]= lists
  
 
 
@@ -437,25 +421,22 @@ segmentsList.append(['inp1:2','u1:a', 1.5,3.6])
 newDictionary = {}
 newDictionary['conn'] = conList
 newDictionary['segments'] = segmentsList
-newDictionary['maxC'] = 95
+newDictionary['sumCap'] = 95
 
 netsDict['_151_'] = newDictionary
 '''
 
-#def getMaxCap(netsDict):
-    
 
 #conList = [['inp1', '*P', 'I'],['u1:a', '*I', 'I']]
 
 #netsDict['_151_'].append(maxC)
 
-'''
-print(netsDict)
-print(netsDict['_151_'])
-print(netsDict['_151_']['conn'])
-print(netsDict['_151_']['segments'])
-print(netsDict['_151_']['maxC'])
-'''
+
+#print(netsDict)
+#print(netsDict['_151_'])
+#print(netsDict['_151_']['conn'])
+#print(netsDict['_151_']['segments'])
+#print(netsDict['_151_']['sumCap'])
 
 
 
