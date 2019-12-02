@@ -392,8 +392,8 @@ for net in def_parser.nets:
     for k in currentNodeList:
         sumC+=currentNodeList[k]
     lists["conn"]=conList
+    lists['maxC']=sumC
     lists['segments']=segmentsList
-    lists['sumCap']=sumC
     netsDict[net.name]= lists
  
 
@@ -421,7 +421,7 @@ segmentsList.append(['inp1:2','u1:a', 1.5,3.6])
 newDictionary = {}
 newDictionary['conn'] = conList
 newDictionary['segments'] = segmentsList
-newDictionary['sumCap'] = 95
+newDictionary['maxC'] = 95
 
 netsDict['_151_'] = newDictionary
 '''
@@ -436,7 +436,7 @@ netsDict['_151_'] = newDictionary
 #print(netsDict['_151_'])
 #print(netsDict['_151_']['conn'])
 #print(netsDict['_151_']['segments'])
-#print(netsDict['_151_']['sumCap'])
+#print(netsDict['_151_']['maxC'])
 
 
 
