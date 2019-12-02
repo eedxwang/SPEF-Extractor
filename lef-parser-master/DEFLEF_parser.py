@@ -395,11 +395,59 @@ for net in def_parser.nets:
     lists['maxC']=sumC
     lists['segments']=segmentsList
     netsDict[net.name]= lists
- 
 
+
+
+
+
+ 
+capCounter = {}
+capCounter[0] = 0
+resCounter = {}
+resCounter[0] = 0
+f = open("output.SPEF","w+")
+def printSPEFNets(netsDict):
+    for key, value in netsDict.items():
+        printNet(netsDict, key)
+        
+def printNet(netsDict, wireName):
+    var=('*D_NET'+" "+ wireName+" "+ str(netsDict[wireName]['maxC']))
+    f.write(var+'\n')
+    var=('*CONN')
+    f.write(var+'\n')
+    for eachConnection in netsDict[wireName]['conn']:
+        var=(eachConnection[0]+" "+ eachConnection[1]+" "+ eachConnection[2])
+        f.write(var+'\n')
+    
+    
+    var=('*CAP')
+    f.write(var+'\n')
+    start = 1 #flag to print pin capacitance = 0
+    for eachSegment in netsDict[wireName]['segments']:
+        if(start):
+            var=(str(capCounter[0])+ " "+ str(eachSegment[0])+" "+ '0')
+            f.write(var+'\n')
+            capCounter[0] += 1
+            var=(str(capCounter[0]) +" "+ str(eachSegment[1]) +" "+ str(eachSegment[2]))
+            f.write(var+'\n')
+            start = 0
+        else:
+            var=(str(capCounter[0]) +" "+ str(eachSegment[1]) +" "+ str(eachSegment[2]))
+            f.write(var+'\n')
+        capCounter[0] += 1
+        
+    var=('*RES')
+    f.write(var+'\n')
+    for eachSegment in netsDict[wireName]['segments']:
+        var=(str(resCounter[0])+" "+ str(eachSegment[0])+" "+ str(eachSegment[1])+" "+ str(eachSegment[3]))
+        f.write(var+'\n')
+        resCounter[0] += 1
+    var=('*END\n')
+    f.write(var+'\n')
 
     
-        
+
+      
         
         
     """
@@ -439,5 +487,6 @@ netsDict['_151_'] = newDictionary
 #print(netsDict['_151_']['maxC'])
 
 
-
+printSPEFNets(netsDict)  
+f.close()
 
