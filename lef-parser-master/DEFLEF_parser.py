@@ -11,7 +11,7 @@ lef_parser = LefParser(path)
 lef_parser.parse()
 
 
-read_path = "bcd_routed.def"
+read_path = "uart.def"
 def_parser = DefParser(read_path)
 def_parser.parse()
 
@@ -152,7 +152,22 @@ def get_resistance(points, points2, segment):
 #    else:
 #        resistance = lef_parser.via_dict[layer_name].resistance[1]
     
+
+def getViaType(via):
+    firstLayer = lef_parser.via_dict[via].layers[0]
+    secondLayer = lef_parser.via_dict[via].layers[1]
+    thirdLayer = lef_parser.via_dict[via].layers[2]
     
+    if(firstLayer.name[0:3] != 'met'):
+        via_type = firstLayer.name
+    if(secondLayer.name[0:3] != 'met'):
+        via_type = secondLayer.name
+    
+    if(thirdLayer.name[0:3] != 'met'):
+        via_type = thirdLayer.name
+    return via_type
+                 
+   
 def get_capacitance(points, points2, segment):
     layer_name = segment
     if(points != points2):
@@ -169,10 +184,9 @@ def get_capacitance(points, points2, segment):
 #    else:
 #        capacitance = lef_parser.via_dict[layer_name].capacitance[1]
     
-def get_resistance_modified(point1, point2, layer_name): #point is a list of (x, y)
+def get_resistance_modified(point1, point2, layer_name, via_type): #point is a list of (x, y)
     if(point1 == point2): #we have a via
-        #Parse Via related data
-        return 0
+        return lef_parser.layer_dict[via_type].resistance
     else: #we have a wire
         rPerSquare = lef_parser.layer_dict[layer_name].resistance[1]
         width = lef_parser.layer_dict[layer_name].width
@@ -180,10 +194,12 @@ def get_resistance_modified(point1, point2, layer_name): #point is a list of (x,
         resistance = wire_len * rPerSquare / width
         return resistance
 
-def get_capacitance_modified(point1, point2, layer_name): #point is a list of (x, y)
+def get_capacitance_modified(point1, point2, layer_name, via_type): #point is a list of (x, y)
     if(point1 == point2): #we have a via
-        #Parse Via related data
-        return 0
+        if(lef_parser.layer_dict[via_type].edge_cap == None):
+            return 0
+        else:
+            return lef_parser.layer_dict[via_type].edge_cap
     else: #we have a wire
         cPerSquare = lef_parser.layer_dict[layer_name].capacitance[1]
         width = lef_parser.layer_dict[layer_name].width
@@ -226,6 +242,7 @@ def checkPinsTable(point, layer, pinsTable):
 segmentsList = []
 bigPinsTable={}
 bigSegmentsTable = {}
+bigCapacitanceTable = {}
 
 for net in def_parser.nets:
     conList = []
@@ -278,7 +295,7 @@ for net in def_parser.nets:
     
     # TODO: this will be used to store capacitance value of each internal node.
     # the value will be incremented if more than 1 segment end at the same node
-    nodeCapacitance = {}
+    currentNodeList = {}
     for segment in net.routed:
         
         for it in range (len(segment.points)):
@@ -309,26 +326,30 @@ for net in def_parser.nets:
                 myVia = segment.end_via
                 if(myVia[-1] == ';'):
                     myVia = myVia[0:-1]
+                
                 firstLayer = lef_parser.via_dict[myVia].layers[0]
                 secondLayer = lef_parser.via_dict[myVia].layers[1]
                 thirdLayer = lef_parser.via_dict[myVia].layers[2]
                 
-                if(firstLayer.name[0:4] != 'metal'):
+                s = firstLayer.name[0:3];
+                if(firstLayer.name[0:3] != 'met'):
                     first = secondLayer.name
                     second = thirdLayer.name
-                if(secondLayer.name[0:4] != 'metal'):
+                if(secondLayer.name[0:3] != 'met'):
                     first = firstLayer.name
                     second = thirdLayer.name
                 
-                if(thirdLayer.name[0:4] != 'metal'):
+                if(thirdLayer.name[0:3] != 'met'):
                     first = firstLayer.name
                     second = secondLayer.name
                     
                 if(first == segment.layer):
+                    choose = 2  # choose second layer in case of creating end node
                     eflag=checkPinsTable(epoint, second, pinsTable)
                 else:
+                    choose = 1  # choose first layer in case of creating end node
                     eflag=checkPinsTable(epoint, first, pinsTable)
-               
+                    
             else:
                 eflag=checkPinsTable(epoint, segment.layer, pinsTable)
                 
@@ -339,15 +360,43 @@ for net in def_parser.nets:
                 enode.append(epoint)
                 enode.append(str(net.name) )
                 enode.append(":" +  str(counter))
-                enode.append(str(segment.layer))
+                if(last):
+                    # if it is a VIA and starting point was on second layer
+                    if(choose == 1):
+                        enode.append(first)
+                    else:
+                        enode.append(second)
+                else:
+                    enode.append(str(segment.layer))
                 counter += 1
                 pinsTable.append(enode)
               
             seg=[]
             
             #TODO: pass segment.endvia to function to be used if 2 points are equal
-            resistance = get_resistance(spoint, epoint, segment.layer)
-            capacitance = get_capacitance(spoint, epoint, segment.layer)
+            
+            if(segment.end_via != None) & (segment.end_via != ';') :
+                via_type = getViaType(segment.end_via)
+                resistance = get_resistance_modified(spoint, epoint, segment.layer, via_type)
+                capacitance = get_capacitance_modified(spoint, epoint, segment.layer, via_type)
+            else:
+                resistance = get_resistance_modified(spoint, epoint, segment.layer, 'via1') # dummy via
+                capacitance = get_capacitance_modified(spoint, epoint, segment.layer, 'via1') #dummy via
+            
+            # the name of the current node
+            currentNodeName = str(enode[1]) + str(enode[2])
+            # put the capacitance for the current node.
+            # TODO: consider multiple segments ending at the same point: add to valie if it exists
+            exists = 0
+            for key in currentNodeList:
+                if(currentNodeName == key):
+                    exists = 1
+                    break
+            if(exists == 1):
+                currentNodeList[currentNodeName] += capacitance
+            else:
+                currentNodeList[currentNodeName] = capacitance
+            
             if(snode[1] != 'PIN'):
                 seg.append(snode[1] + snode[2])
                 seg.append(enode[1] + enode[2])
@@ -360,7 +409,7 @@ for net in def_parser.nets:
                     
     bigPinsTable[net.name] = pinsTable
     bigSegmentsTable[net.name] = segmentsList
-      
+    bigCapacitanceTable[net.name] = currentNodeList
         
  
 
