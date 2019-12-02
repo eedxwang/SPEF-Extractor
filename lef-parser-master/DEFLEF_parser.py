@@ -428,18 +428,18 @@ def printNet(netsDict, wireName):
             var=(str(capCounter[0])+ " "+ str(eachSegment[0])+" "+ '0')
             f.write(var+'\n')
             capCounter[0] += 1
-            var=(str(capCounter[0]) +" "+ str(eachSegment[1]) +" "+ str(eachSegment[2]))
+            var=(str(capCounter[0]) +" "+ str(eachSegment[1]) +" "+ str(eachSegment[3]))
             f.write(var+'\n')
             start = 0
         else:
-            var=(str(capCounter[0]) +" "+ str(eachSegment[1]) +" "+ str(eachSegment[2]))
+            var=(str(capCounter[0]) +" "+ str(eachSegment[1]) +" "+ str(eachSegment[3]))
             f.write(var+'\n')
         capCounter[0] += 1
         
     var=('*RES')
     f.write(var+'\n')
     for eachSegment in netsDict[wireName]['segments']:
-        var=(str(resCounter[0])+" "+ str(eachSegment[0])+" "+ str(eachSegment[1])+" "+ str(eachSegment[3]))
+        var=(str(resCounter[0])+" "+ str(eachSegment[0])+" "+ str(eachSegment[1])+" "+ str(eachSegment[2]))
         f.write(var+'\n')
         resCounter[0] += 1
     var=('*END\n')
