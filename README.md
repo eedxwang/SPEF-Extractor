@@ -29,7 +29,10 @@ During our development, we had to make some assumptions to for the sake of simpl
   1. We considered an uncertainty 5 units  for all wires in all metal layers.
   2. It is assumed that the values that do not exist in the LEF file are considered to be 0.
   3. We represented each wire segment as a single resistance and a capacitance
-  4. Testing was done manually. 
+  4. We consider the capacitance of a segment to be at the end node of the segment
+  5. We handle pins that are placed in 1 metal layer only
+  6. We manually extracted the lef-to-def conversion factor
+  7. Testing was done manually. 
 
 ## Acknowledgement:
   This was created for the Digital Design 2 Course CSCE3304 at the American University in Cairo under the supervision of Doctor Mohamed Shalan.
@@ -37,6 +40,6 @@ During our development, we had to make some assumptions to for the sake of simpl
 ## Authors:
   * Ramez Moussa - [Github Profile](https://github.com/ramezmoussa)
   * Hany Moussa - [Github Profile](https://github.com/hanymoussa)
-  * Mohamed Mahfouz - [Github Profile]()
-  * Samah Hussein - [Github Prifle]()
+  * Mohamed Mahfouz - [Github Profile](https://github.com/Mahfouz-z)
+  * Samah Hussein - [Github Prifle](https://github.com/hysamah)
   
