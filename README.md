@@ -19,7 +19,7 @@ Additionally, the library provides the functionality to size up cells accordingl
    ```
 
 ## Using the library
-In order to use the optimizer, run the `main.py` script. You will be asked to input the names of the LEF and DEF files, which have to be in the same folder as the `main.py`. Aftwards, we extract the RC parasitics and output them in a SPEF file named `RC_parasitics.spef`
+In order to use the optimizer, run the `main.py` script from the lef-parser-master folder. You will be asked to input the names of the LEF and DEF files, which have to be in the same folder as the `main.py`. Aftwards, we extract the RC parasitics and output them in a SPEF file named `RC_parasitics.spef`
 
 ## Testing
 For the initial submission, we tested the generated SPEF manually. This was done through checking a number of nets, and comparing the parasitics in the file with the theoretical value. 
