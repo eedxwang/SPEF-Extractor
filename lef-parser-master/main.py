@@ -4,23 +4,6 @@ from lef_parser import *
 
 from collections import defaultdict
 
-# We had to modify the lef parser to ignore the second parameter for the offset
-# since our files provide only 1 value
-path = "osu035.lef"
-lef_parser = LefParser(path)
-lef_parser.parse()
-
-
-read_path = "uart.def"
-def_parser = DefParser(read_path)
-def_parser.parse()
-#netsDict = defaultdict(list)
-pinsTable = []
-
-# l2d is the conversion factor between the scale in LEF and DEF
-# we need a function to generalize this for any two lef and def files
-l2d = 100
-
 
 # A function that takes an instance and a pin and returns a list of all
 # rectangles of that pin 
@@ -134,12 +117,6 @@ def getPinLocation(instanceName, pinName, listOfPinRects):
             ll = (llx, lly)
             ur = (urx, ury)
             listOfPinRects.append((ll, ur))
-    
-# test the getPinLocationFunction
-listOfLocations = []
-#getPinLocation('NOR2X1_1', 'A', listOfLocations)
-
-    
 
 def getViaType(via):
     firstLayer = lef_parser.via_dict[via].layers[0]
@@ -164,7 +141,7 @@ def get_resistance_modified(point1, point2, layer_name, via_type): #point is a l
         width = lef_parser.layer_dict[layer_name].width
         wire_len = abs(point1[0] - point2[0]) + abs(point1[1] - point2[1])
         resistance = wire_len * rPerSquare / width
-        return resistance
+        return resistance/l2d
 
 def get_capacitance_modified(point1, point2, layer_name, via_type): #point is a list of (x, y)
     if(point1 == point2): #we have a via
@@ -181,7 +158,7 @@ def get_capacitance_modified(point1, point2, layer_name, via_type): #point is a 
         else:
             edgeCapacitance = 0
         capacitance = length * cPerSquare * width + edgeCapacitance * length
-        return capacitance
+        return capacitance/l2d
     
 
 def checkPinsTable(point, layer, pinsTable): 
@@ -211,11 +188,93 @@ def checkPinsTable(point, layer, pinsTable):
             flag= "new"
     return flag
 
+def printSPEFNets(netsDict):
+    for key, value in netsDict.items():
+        printNet(netsDict, key)
+        
+def printNet(netsDict, wireName):
+    var=('*D_NET'+" "+ wireName+" "+ str(netsDict[wireName]['maxC']))
+    f.write(var+'\n')
+    var=('*CONN')
+    f.write(var+'\n')
+    for eachConnection in netsDict[wireName]['conn']:
+        var=(eachConnection[0]+" "+ eachConnection[1]+" "+ eachConnection[2])
+        f.write(var+'\n')
+    
+    
+    var=('*CAP')
+    f.write(var+'\n')
+    
+    
+    for key,value in bigCapacitanceTable[wireName].items():
+        var=(str(capCounter[0]) +" "+ str(key) +" "+ str(value))
+        f.write(var+'\n')
+        capCounter[0] += 1
+        
+    """
+    start = 1 #flag to print pin capacitance = 0
+    for eachSegment in netsDict[wireName]['segments']:
+        if(start):
+            var=(str(capCounter[0])+ " "+ str(eachSegment[0])+" "+ '0')
+            f.write(var+'\n')
+            capCounter[0] += 1
+            var=(str(capCounter[0]) +" "+ str(eachSegment[1]) +" "+ str(eachSegment[3]))
+            f.write(var+'\n')
+            start = 0
+        else:
+            var=(str(capCounter[0]) +" "+ str(eachSegment[1]) +" "+ str(eachSegment[3]))
+            f.write(var+'\n')
+        capCounter[0] += 1
+    """    
+    var=('*RES')
+    f.write(var+'\n')
+    for eachSegment in netsDict[wireName]['segments']:
+        var=(str(resCounter[0])+" "+ str(eachSegment[0])+" "+ str(eachSegment[1])+" "+ str(eachSegment[2]))
+        f.write(var+'\n')
+        resCounter[0] += 1
+    var=('*END\n')
+    f.write(var+'\n')
+    
+    
+    
+    
+    
+    
+# main starts here:
+    
+    
+    
+pinsTable = []
+
+# l2d is the conversion factor between the scale in LEF and DEF
+# we need a function to generalize this for any two lef and def files
+l2d = 100
+    
+listOfLocations = []
+
+
 segmentsList = []
 bigPinsTable={}
 bigSegmentsTable = {}
 bigCapacitanceTable = {}
 netsDict = {}
+
+
+
+print("Input LEF file name")
+lefPath = input()
+
+# We had to modify the lef parser to ignore the second parameter for the offset
+# since our files provide only 1 value
+lef_parser = LefParser(lefPath)
+lef_parser.parse()
+
+print("Input DEF file name")
+defPath = input()
+def_parser = DefParser(defPath)
+def_parser.parse()
+
+
 
 for net in def_parser.nets:
     conList = []
@@ -399,104 +458,33 @@ for net in def_parser.nets:
     netsDict[net.name]= lists
 
 
+def printSPEFHeader():
+    f.write('*SPEF "IEEE 1481-1998"'+'\n')
+    f.write('*DESIGN "'+ def_parser.design_name + '"'+'\n')
+    f.write('*DESIGN_FLOW "PIN_CAP NONE"'+'\n')
+    f.write('*DIVIDER' + def_parser.dividerchar +'\n')
+    f.write('*DELIMITER :')
+    f.write('*BUS_DELIMITER' + def_parser.busbitchars +'\n')
+    f.write('T_UNIT 1.00000 NS' +'\n')
+    f.write('*C_UNIT 1.00000 FF'+'\n')
+    f.write('*R_UNIT 1.00000 OHM'+'\n')
+    f.write('*L_UNIT 1.00000 HENRY'+'\n')
+    f.write('\n'+'\n')
 
 
+print("RC Extraction is done")
 
  
 capCounter = {}
 capCounter[0] = 0
 resCounter = {}
 resCounter[0] = 0
-f = open("output.SPEF","w+")
-def printSPEFNets(netsDict):
-    for key, value in netsDict.items():
-        printNet(netsDict, key)
-        
-def printNet(netsDict, wireName):
-    var=('*D_NET'+" "+ wireName+" "+ str(netsDict[wireName]['maxC']))
-    f.write(var+'\n')
-    var=('*CONN')
-    f.write(var+'\n')
-    for eachConnection in netsDict[wireName]['conn']:
-        var=(eachConnection[0]+" "+ eachConnection[1]+" "+ eachConnection[2])
-        f.write(var+'\n')
-    
-    
-    var=('*CAP')
-    f.write(var+'\n')
-    
-    
-    for key,value in bigCapacitanceTable[wireName].items():
-        var=(str(capCounter[0]) +" "+ str(key) +" "+ str(value))
-        f.write(var+'\n')
-        capCounter[0] += 1
-        
-    """
-    start = 1 #flag to print pin capacitance = 0
-    for eachSegment in netsDict[wireName]['segments']:
-        if(start):
-            var=(str(capCounter[0])+ " "+ str(eachSegment[0])+" "+ '0')
-            f.write(var+'\n')
-            capCounter[0] += 1
-            var=(str(capCounter[0]) +" "+ str(eachSegment[1]) +" "+ str(eachSegment[3]))
-            f.write(var+'\n')
-            start = 0
-        else:
-            var=(str(capCounter[0]) +" "+ str(eachSegment[1]) +" "+ str(eachSegment[3]))
-            f.write(var+'\n')
-        capCounter[0] += 1
-    """    
-    var=('*RES')
-    f.write(var+'\n')
-    for eachSegment in netsDict[wireName]['segments']:
-        var=(str(resCounter[0])+" "+ str(eachSegment[0])+" "+ str(eachSegment[1])+" "+ str(eachSegment[2]))
-        f.write(var+'\n')
-        resCounter[0] += 1
-    var=('*END\n')
-    f.write(var+'\n')
+f = open("RC_parasitics.spef","w+")
 
-    
-
-      
-        
-        
-    """
-    newDictionary = {}
-    newDictionary['conn'] = conList
-    newDictionary['segments'] = segmentsList
-    newDictionary['maxC'] = 95
-    """    
-    
-    
-    
-    
-'''
-segmentsList.append(['inp1','inp1:1', 1.4,3.4])
-segmentsList.append(['inp1:1','inp1:2', 1.4,3.5])
-segmentsList.append(['inp1:2','u1:a', 1.5,3.6])
-#maxC = getMaxCap(netsDict)
-
-newDictionary = {}
-newDictionary['conn'] = conList
-newDictionary['segments'] = segmentsList
-newDictionary['maxC'] = 95
-
-netsDict['_151_'] = newDictionary
-'''
-
-
-#conList = [['inp1', '*P', 'I'],['u1:a', '*I', 'I']]
-
-#netsDict['_151_'].append(maxC)
-
-
-#print(netsDict)
-#print(netsDict['_151_'])
-#print(netsDict['_151_']['conn'])
-#print(netsDict['_151_']['segments'])
-#print(netsDict['_151_']['maxC'])
-
+print("Start writing SPEF file")
+printSPEFHeader()
 
 printSPEFNets(netsDict)  
 f.close()
+print("Writing SPEF is done")
 
