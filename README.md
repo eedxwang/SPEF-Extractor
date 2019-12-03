@@ -12,7 +12,8 @@ Additionally, the library provides the functionality to size up cells accordingl
    pip install numpy
    
    pip install sympy
-   
+  
+   pip install matplotpy   
    
    git clone https://github.com/HanyMoussa/SPEF-Extractor/
    ```
