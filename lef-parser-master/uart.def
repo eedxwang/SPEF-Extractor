@@ -547,11 +547,12 @@ NETS 377 ;
   NEW metal1 ( 22720 9800 ) M2_M1 
   NEW metal2 ( 22720 9800 ) ( * 11000 ) M3_M2 
   NEW metal3 ( 22720 11000 ) ( 22560 * ) 
-  NEW metal1 ( 22400 9200 ) ( 22720 * ) ( * 9190 ) 
+  NEW metal4 ( 20000 7200 ) ( * 11000 ) M4_M3
   NEW metal1 ( 20000 7000 ) M2_M1 
   NEW metal2 ( 20000 7000 ) ( * 7200 ) M3_M2 
   NEW metal3 ( 20000 7200 ) M4_M3 
-  NEW metal4 ( 20000 7200 ) ( * 11000 ) M4_M3 ;
+  NEW metal1 ( 22400 9200 ) ( 22720 * ) ( * 9190 ) ;
+  
 - _13__bF$buf3
   ( NAND2X1_22 A ) 
   ( NAND3X1_11 A ) 
@@ -646,11 +647,12 @@ NETS 377 ;
   NEW metal3 ( 29120 15200 ) ( 22880 * ) M3_M2 
   NEW metal2 ( 22880 15200 ) ( * 13400 ) 
   NEW metal1 ( 29280 17000 ) M2_M1 
+  NEW metal3 ( 28000 16800 ) ( 29280 * ) M3_M2
   NEW metal2 ( 29280 17000 ) ( * 15200 ) M3_M2 
-  NEW metal3 ( 29280 15200 ) ( 29120 * ) 
   NEW metal1 ( 28000 17000 ) M2_M1 
   NEW metal2 ( 28000 17000 ) ( * 16800 ) M3_M2 
-  NEW metal3 ( 28000 16800 ) ( 29280 * ) M3_M2 ;
+  NEW metal3 ( 29280 15200 ) ( 29120 * ) ;
+  
 - clk
   ( PIN clk ) 
   ( BUFX4_10 A ) 
@@ -681,9 +683,10 @@ NETS 377 ;
   NEW metal3 ( -159 5200 ) ( 160 * ) M4_M3 
   NEW metal4 ( 160 5200 ) ( * 9400 ) M4_M3 
   NEW metal3 ( 160 9400 ) ( 4160 * ) M3_M2 
-  NEW metal2 ( 4160 9400 ) ( * 11000 ) 
+  NEW metal2 ( 160 5200 ) M3_M2 
   NEW metal1 ( 160 5200 ) M2_M1 
-  NEW metal2 ( 160 5200 ) M3_M2 ;
+  NEW metal2 ( 4160 9400 ) ( * 11000 ) ;
+  
 - clk_bF$buf6
   ( DFFPOSX1_58 CLK ) 
   ( DFFPOSX1_42 CLK ) 
@@ -716,9 +719,10 @@ NETS 377 ;
   NEW metal2 ( 5920 9600 ) ( * 10600 ) M2_M1 
   NEW metal1 ( 6720 10800 ) M2_M1 
   NEW metal2 ( 6720 10800 ) ( * 11000 ) M3_M2 
-  NEW metal3 ( 6720 11000 ) ( 5280 * ) 
+  NEW metal2 ( 7680 13400 ) ( * 11000 ) M2_M1 
   NEW metal1 ( 7680 13400 ) M2_M1 
-  NEW metal2 ( 7680 13400 ) ( * 11000 ) M2_M1 ;
+  NEW metal3 ( 6720 11000 ) ( 5280 * ) ;
+  
 - clk_bF$buf5
   ( DFFPOSX1_47 CLK ) 
   ( DFFPOSX1_46 CLK ) 
@@ -860,14 +864,15 @@ NETS 377 ;
   NEW metal1 ( 22240 1400 ) ( * 1390 ) 
   NEW metal1 ( 28480 2800 ) M2_M1 
   NEW metal2 ( 28480 2800 ) M3_M2 
-  NEW metal3 ( 28480 2800 ) ( 23840 * ) 
+  NEW metal3 ( 28640 8800 ) ( 25280 * ) M3_M2 
   NEW metal1 ( 28800 1400 ) M2_M1 
   NEW metal2 ( 28800 1400 ) ( * 2600 ) M2_M1 
   NEW metal1 ( 25280 9200 ) M2_M1 
   NEW metal2 ( 25280 9200 ) ( * 2800 ) M3_M2 
   NEW metal1 ( 28640 9400 ) M2_M1 
   NEW metal2 ( 28640 9400 ) ( * 8800 ) M3_M2 
-  NEW metal3 ( 28640 8800 ) ( 25280 * ) M3_M2 ;
+  NEW metal3 ( 28480 2800 ) ( 23840 * ) ;
+  
 - clk_bF$buf1
   ( DFFPOSX1_40 CLK ) 
   ( DFFPOSX1_25 CLK ) 
@@ -898,10 +903,10 @@ NETS 377 ;
   NEW metal2 ( 3840 18600 ) ( * 17400 ) M2_M1 
   NEW metal1 ( 9280 15000 ) M2_M1 
   NEW metal2 ( 9280 15000 ) ( * 14600 ) M3_M2 
-  NEW metal3 ( 9280 14600 ) ( 6560 * ) 
   NEW metal1 ( 1760 18800 ) M2_M1 
   NEW metal2 ( 1760 18800 ) ( * 18600 ) M3_M2 
-  NEW metal3 ( 1760 18600 ) ( 3840 * ) M3_M2 ;
+  NEW metal3 ( 1760 18600 ) ( 3840 * ) M3_M2 
+  NEW metal3 ( 9280 14600 ) ( 6560 * ) ;
 - clk_bF$buf0
   ( DFFPOSX1_17 CLK ) 
   ( DFFPOSX1_18 CLK ) 
@@ -930,11 +935,11 @@ NETS 377 ;
   NEW metal3 ( 21280 6600 ) ( 17280 * ) 
   NEW metal1 ( 22240 5600 ) M2_M1 
   NEW metal2 ( 22240 5600 ) ( * 6800 ) M2_M1 
-  NEW metal1 ( 22240 6800 ) ( * 6810 ) 
   NEW metal1 ( 20160 9200 ) ( 20320 * ) M2_M1 
   NEW metal2 ( 20320 9200 ) ( * 6600 ) M3_M2 
   NEW metal1 ( 21120 10800 ) M2_M1 
-  NEW metal2 ( 21120 10800 ) ( * 9400 ) M2_M1 ;
+  NEW metal2 ( 21120 10800 ) ( * 9400 ) M2_M1 
+  NEW metal1 ( 22240 6800 ) ( * 6810 ) ;
 - reset
   ( PIN reset ) 
   ( AOI21X1_19 C ) 
@@ -996,11 +1001,11 @@ NETS 377 ;
   NEW metal2 ( 25440 13600 ) ( * 12800 ) M3_M2 
   NEW metal3 ( 25440 12800 ) ( 25120 * ) M3_M2 
   NEW metal2 ( 25120 12800 ) ( * 8800 ) M3_M2 
-  NEW metal3 ( 25120 8800 ) ( 22560 * ) 
   NEW metal1 ( 25600 17400 ) M2_M1 
   NEW metal2 ( 25600 17400 ) M3_M2 
   NEW metal3 ( 25600 17400 ) ( 25440 * ) M4_M3 
-  NEW metal4 ( 25440 17400 ) ( * 12800 ) M4_M3 ;
+  NEW metal4 ( 25440 17400 ) ( * 12800 ) M4_M3 
+  NEW metal3 ( 25120 8800 ) ( 22560 * ) ;
 - _233_
   ( DFFPOSX1_2 Q ) 
   ( BUFX2_12 A ) 
@@ -1063,11 +1068,11 @@ NETS 377 ;
 + ROUTED metal1 ( 26720 5200 ) ( 27200 * ) 
   NEW metal1 ( 26720 6600 ) M2_M1 
   NEW metal2 ( 26720 6600 ) ( * 5200 ) M2_M1 
-  NEW metal1 ( 26880 6800 ) ( 26720 * ) M2_M1 
-  NEW metal2 ( 26720 6800 ) ( * 6600 ) 
+  NEW metal1 ( 26880 6800 ) ( 26720 * ) M2_M1  
   NEW metal1 ( 28320 5400 ) M2_M1 
   NEW metal2 ( 28320 5400 ) ( * 5600 ) M3_M2 
-  NEW metal3 ( 28320 5600 ) ( 26720 * ) M3_M2 ;
+  NEW metal3 ( 28320 5600 ) ( 26720 * ) M3_M2 
+  NEW metal2 ( 26720 6800 ) ( * 6600 ) ;
 - tx_bitcount<3>
   ( DFFPOSX1_6 Q ) 
   ( INVX2_2 A ) 
@@ -1087,10 +1092,10 @@ NETS 377 ;
   NEW metal2 ( 30560 6800 ) ( * 5000 ) 
   NEW metal1 ( 29600 5200 ) M2_M1 
   NEW metal2 ( 29600 5200 ) ( * 5400 ) M3_M2 
-  NEW metal3 ( 29600 5400 ) ( 30560 * ) M3_M2 
-  NEW metal1 ( 29280 5200 ) ( 29600 * ) 
+  NEW metal3 ( 29600 5400 ) ( 30560 * ) M3_M2  
   NEW metal1 ( 29920 15000 ) ( 30400 * ) M2_M1 
-  NEW metal2 ( 30400 15000 ) ( * 9600 ) ( 30560 * ) ( * 6800 ) ;
+  NEW metal2 ( 30400 15000 ) ( * 9600 ) ( 30560 * ) ( * 6800 ) 
+  NEW metal1 ( 29280 5200 ) ( 29600 * ) ;
 - tx_bitcount<2>
   ( DFFPOSX1_5 Q ) 
   ( NAND2X1_8 A ) 
@@ -1151,6 +1156,7 @@ NETS 377 ;
   NEW metal3 ( 12640 5200 ) ( 13280 * ) M3_M2 
   NEW metal1 ( 12480 3000 ) M2_M1 
   NEW metal2 ( 12480 3000 ) ( 12640 * ) ( * 5200 ) ;
+  
 - _19_
   ( OAI21X1_31 A ) 
   ( NOR3X1_1 A ) 
@@ -1164,6 +1170,7 @@ NETS 377 ;
   NEW metal1 ( 20960 5400 ) M2_M1 
   NEW metal2 ( 20960 5400 ) ( * 6000 ) M3_M2 
   NEW metal3 ( 20960 6000 ) ( 20480 * ) ;
+  
 - tx_bitcount<0>
   ( DFFPOSX1_3 Q ) 
   ( NOR2X1_17 B ) 
@@ -3533,6 +3540,8 @@ NETS 377 ;
   NEW metal2 ( 14080 15800 ) M3_M2 
   NEW metal3 ( 14080 15800 ) ( 16640 * ) M3_M2 
   NEW metal2 ( 16640 15800 ) ( * 17200 ) ;
+  
+  
 - _146_
   ( OAI21X1_34 C ) 
   ( NAND2X1_17 Y ) 
@@ -3541,14 +3550,20 @@ NETS 377 ;
   NEW metal3 ( 16640 15200 ) ( 16160 * ) M3_M2 
   NEW metal2 ( 16160 15200 ) ( * 16800 ) M2_M1 
   NEW metal1 ( 16160 16800 ) ( 16320 * ) ;
+  
+  
 - _147_
   ( NAND2X1_18 B ) 
   ( OAI21X1_34 Y ) 
 + ROUTED metal1 ( 16480 15200 ) ( * 15000 ) ( 16800 * ) ;
+
+
 - _148_
   ( NOR2X1_25 B ) 
   ( NAND2X1_18 Y ) 
 + ROUTED metal1 ( 16000 15000 ) ( 16320 * ) ;
+
+
 - _6_
   ( DFFPOSX1_28 D ) 
   ( NOR2X1_25 Y ) 

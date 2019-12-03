@@ -14,7 +14,6 @@ lef_parser.parse()
 read_path = "uart.def"
 def_parser = DefParser(read_path)
 def_parser.parse()
-
 #netsDict = defaultdict(list)
 pinsTable = []
 
@@ -138,7 +137,7 @@ def getPinLocation(instanceName, pinName, listOfPinRects):
     
 # test the getPinLocationFunction
 listOfLocations = []
-getPinLocation('NOR2X1_1', 'A', listOfLocations)
+#getPinLocation('NOR2X1_1', 'A', listOfLocations)
 
     
 
@@ -271,7 +270,6 @@ for net in def_parser.nets:
     # the value will be incremented if more than 1 segment end at the same node
     currentNodeList = {}
     for segment in net.routed:
-        
         for it in range (len(segment.points)):
             last = 0
             if(it < (len(segment.points) - 1)):
@@ -281,6 +279,10 @@ for net in def_parser.nets:
                 spoint = segment.points[it]
                 epoint = segment.points[it]
                 last = 1
+                #if we are at the last point and there is no via, then ignore the point
+                #as it has already been considered with the previous point
+                if((segment.end_via == ';' or segment.end_via == None)):
+                    continue
                 
             sflag=checkPinsTable(spoint, segment.layer, pinsTable)
             
@@ -422,6 +424,14 @@ def printNet(netsDict, wireName):
     
     var=('*CAP')
     f.write(var+'\n')
+    
+    
+    for key,value in bigCapacitanceTable[wireName].items():
+        var=(str(capCounter[0]) +" "+ str(key) +" "+ str(value))
+        f.write(var+'\n')
+        capCounter[0] += 1
+        
+    """
     start = 1 #flag to print pin capacitance = 0
     for eachSegment in netsDict[wireName]['segments']:
         if(start):
@@ -435,7 +445,7 @@ def printNet(netsDict, wireName):
             var=(str(capCounter[0]) +" "+ str(eachSegment[1]) +" "+ str(eachSegment[3]))
             f.write(var+'\n')
         capCounter[0] += 1
-        
+    """    
     var=('*RES')
     f.write(var+'\n')
     for eachSegment in netsDict[wireName]['segments']:
