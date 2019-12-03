@@ -463,7 +463,7 @@ def printSPEFHeader():
     f.write('*DESIGN "'+ def_parser.design_name + '"'+'\n')
     f.write('*DESIGN_FLOW "PIN_CAP NONE"'+'\n')
     f.write('*DIVIDER' + def_parser.dividerchar +'\n')
-    f.write('*DELIMITER :')
+    f.write('*DELIMITER :' + '\n')
     f.write('*BUS_DELIMITER' + def_parser.busbitchars +'\n')
     f.write('T_UNIT 1.00000 NS' +'\n')
     f.write('*C_UNIT 1.00000 FF'+'\n')
