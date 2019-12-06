@@ -5,9 +5,10 @@ from lef_parser import *
 from collections import defaultdict
 
 import sys
+import datetime
 
-
-    
+#in order to print Date in the SPEF file
+now = datetime.datetime.now()
     
 def remap_names():
     name_counter = 0
@@ -492,11 +493,15 @@ for net in def_parser.nets:
 def printSPEFHeader():
     f.write('*SPEF "IEEE 1481-1998"'+'\n')
     f.write('*DESIGN "'+ def_parser.design_name + '"'+'\n')
+    f.write('*DATE "' + now.strftime("%a %b %d %H:%M:%S %Y") + '"\n')
+    f.write('*VENDOR "ISPD 2013 Contest"\n')
+    f.write('*PROGRAM "Benchmark Parasitic Generator"\n')
+    f.write('*VERSION "0.0"\n')
     f.write('*DESIGN_FLOW "PIN_CAP NONE"'+'\n')
-    f.write('*DIVIDER' + def_parser.dividerchar +'\n')
+    f.write('*DIVIDER ' + def_parser.dividerchar[1] +'\n')
     f.write('*DELIMITER :' + '\n')
-    f.write('*BUS_DELIMITER' + def_parser.busbitchars +'\n')
-    f.write('T_UNIT 1.00000 NS' +'\n')
+    f.write('*BUS_DELIMITER ' + def_parser.busbitchars[1:3] +'\n')
+    f.write('*T_UNIT 1.00000 NS' +'\n')
     f.write('*C_UNIT 1.00000 FF'+'\n')
     f.write('*R_UNIT 1.00000 OHM'+'\n')
     f.write('*L_UNIT 1.00000 HENRY'+'\n')
