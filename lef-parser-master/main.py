@@ -4,7 +4,11 @@ from lef_parser import *
 
 from collections import defaultdict
 
+import sys
 
+
+    
+    
 def remap_names():
     name_counter = 0
     map_of_names = []
@@ -278,19 +282,28 @@ bigSegmentsTable = {}
 bigCapacitanceTable = {}
 netsDict = {}
 
-
+#run from terminal section
+"""
+if(len(sys.argv) < 3):
+    sys.exit("Arguments should be passed: python <script_name>.py <path/lef_name>.lef <path/def_name>.def")
+elif(sys.argv[1].find(".lef") == -1 or sys.argv[2].find(".def") == -1):
+    sys.exit("Arguments should be passed: python <script_name>.py <path/lef_name>.lef <path/def_name>.def")
+else:
+    lef_file_name = sys.argv[1]
+    def_file_name = sys.argv[2]
+"""    
 
 print("Input LEF file name")
-lefPath = input()
+#lefPath = input()
 
 # We had to modify the lef parser to ignore the second parameter for the offset
 # since our files provide only 1 value
-lef_parser = LefParser(lefPath)
+lef_parser = LefParser("osu035.lef")
 lef_parser.parse()
 
 print("Input DEF file name")
-defPath = input()
-def_parser = DefParser(defPath)
+#defPath = input()
+def_parser = DefParser("uart.def")
 def_parser.parse()
 
 map_of_names = remap_names()
@@ -302,8 +315,6 @@ for net in def_parser.nets:
     # generate the conn data structure for conn section
     for con in net.comp_pin:
         #check if pin is *P
-        if(con[1] == 'binary<0>'):
-            print('test')
         current_pin = []
         locationsOfCurrentPin = []
         if(con[0] == "PIN"):
@@ -454,7 +465,7 @@ for net in def_parser.nets:
             if(snode[1] != 'PIN'):
                 seg.append(snode[1]  + ':' + snode[2])
                 seg.append(enode[1]  + ':' + enode[2])
-                print (seg)
+                #print (seg)
             else:
                 seg.append(snode[2])
                 seg.append(enode[2])
