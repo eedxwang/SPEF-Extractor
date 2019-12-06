@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+     # -*- coding: utf-8 -*-
 from def_parser import *
 from lef_parser import *
 
@@ -351,7 +351,7 @@ for net in def_parser.nets:
                 snode = []
                 snode.append(spoint)
                 snode.append(str(net.name) )
-                snode.append(":" +  str(counter))
+                snode.append(str(counter))
                 snode.append(str(segment.layer))
                 counter += 1
                 pinsTable.append(snode)
@@ -394,7 +394,7 @@ for net in def_parser.nets:
                 enode = []
                 enode.append(epoint)
                 enode.append(str(net.name) )
-                enode.append(":" +  str(counter))
+                enode.append(str(counter))
                 if(last):
                     # if it is a VIA and starting point was on second layer
                     if(choose == 1):
@@ -419,7 +419,7 @@ for net in def_parser.nets:
                 capacitance = get_capacitance_modified(spoint, epoint, segment.layer, 'via1') #dummy via
             
             # the name of the current node
-            currentNodeName = str(enode[1]) + str(enode[2])
+            currentNodeName = str(enode[1]) + ':' + str(enode[2])
             # put the capacitance for the current node.
             # TODO: consider multiple segments ending at the same point: add to valie if it exists
             exists = 0
@@ -433,8 +433,9 @@ for net in def_parser.nets:
                 currentNodeList[currentNodeName] = capacitance
             
             if(snode[1] != 'PIN'):
-                seg.append(snode[1] + snode[2])
-                seg.append(enode[1] + enode[2])
+                seg.append(snode[1]  + ':' + snode[2])
+                seg.append(enode[1]  + ':' + enode[2])
+                print (seg)
             else:
                 seg.append(snode[2])
                 seg.append(enode[2])
