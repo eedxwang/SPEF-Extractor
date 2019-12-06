@@ -5,6 +5,25 @@ from lef_parser import *
 from collections import defaultdict
 
 
+def remap_names():
+    name_counter = 0
+    map_of_names = []
+    for key in def_parser.nets.net_dict:
+        new_name = []
+        new_name.append(def_parser.nets.net_dict[key].name)
+        def_parser.nets.net_dict[key].name = "*" + str(name_counter)
+        new_name.append(def_parser.nets.net_dict[key].name)
+        name_counter += 1
+        map_of_names.append(new_name)
+    return(map_of_names)
+
+
+def printNameMap(map_of_names):
+    f.write('*NAME_MAP\n')
+    for entry in map_of_names:
+        f.write(entry[1] + " " + entry[0] + "\n")
+    f.write("\n")
+
 # A function that takes an instance and a pin and returns a list of all
 # rectangles of that pin 
 def getPinLocation(instanceName, pinName, listOfPinRects):
@@ -274,7 +293,7 @@ defPath = input()
 def_parser = DefParser(defPath)
 def_parser.parse()
 
-
+map_of_names = remap_names()
 
 for net in def_parser.nets:
     conList = []
@@ -484,7 +503,7 @@ f = open("RC_parasitics.spef","w+")
 
 print("Start writing SPEF file")
 printSPEFHeader()
-
+printNameMap(map_of_names)
 printSPEFNets(netsDict)  
 f.close()
 print("Writing SPEF is done")
