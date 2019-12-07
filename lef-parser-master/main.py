@@ -304,7 +304,7 @@ lef_parser.parse()
 
 print("Input DEF file name")
 #defPath = input()
-def_parser = DefParser("uart.def")
+def_parser = DefParser("spi_master.def")
 def_parser.parse()
 
 map_of_names = remap_names()

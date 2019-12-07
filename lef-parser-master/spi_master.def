@@ -205,7 +205,7 @@ NETS 85 ;
   ( NAND2X1_2 A ) 
   ( OAI21X1_1 A ) 
   ( NAND2X1_1 A ) 
-+ ROUTED metal1 ( 6240 1400 ) M2_M1 
++ ROUTED metal1 ( 6240 1400 ) M2_M1
   NEW metal2 ( 6240 1400 ) M3_M2 
   NEW metal3 ( 6240 1400 ) ( 5280 * ) M3_M2 
   NEW metal1 ( 5280 1400 ) M2_M1 

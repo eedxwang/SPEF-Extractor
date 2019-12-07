@@ -271,7 +271,8 @@ class Nets:
                         new_routed.points.append(new_pt)
                     else:
                         # this should be via end point
-                        new_routed.end_via = info[idx]
+                        if(info[idx] != ';'):
+                            new_routed.end_via = info[idx]
                         # the location of end_via is the last point in the route
                         new_routed.end_via_loc = new_routed.points[-1]
                 # add new_routed to the current_net
