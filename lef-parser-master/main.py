@@ -465,10 +465,12 @@ for net in def_parser.nets:
             
             if(snode[1] != 'PIN'):
                 seg.append(snode[1]  + ':' + snode[2])
-                seg.append(enode[1]  + ':' + enode[2])
-                #print (seg)
             else:
                 seg.append(snode[2])
+                #print (seg)
+            if(enode[1] != 'PIN'): 
+                seg.append(enode[1]  + ':' + enode[2])
+            else:
                 seg.append(enode[2])
             seg.append(resistance)
             seg.append(capacitance)
