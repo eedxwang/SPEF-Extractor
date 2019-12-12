@@ -266,7 +266,7 @@ NETS 85 ;
   NEW metal2 ( 8800 2800 ) M3_M2 
   NEW metal3 ( 8800 2800 ) ( 5920 * ) M3_M2 
   NEW metal2 ( 5920 2800 ) ( * 1400 ) M2_M1 ;
-- shift.data<3>
+- shift_data<3>
   ( MUX2X1_8 B ) 
   ( DFFSR_4 Q ) 
   ( MUX2X1_1 A ) 
@@ -277,7 +277,7 @@ NETS 85 ;
   NEW metal2 ( 6880 3800 ) ( * 4000 ) M3_M2 
   NEW metal3 ( 6880 4000 ) ( 5920 * ) M3_M2 
   NEW metal2 ( 5920 4000 ) ( * 5200 ) ;
-- shift.data<4>
+- shift_data<4>
   ( DFFSR_5 Q ) 
   ( MUX2X1_2 A ) 
   ( MUX2X1_1 B ) 
@@ -344,7 +344,7 @@ NETS 85 ;
   NEW metal3 ( 7360 8200 ) ( 6400 * ) M3_M2 
   NEW metal2 ( 6400 8200 ) ( * 7800 ) M2_M1 
   NEW metal1 ( 6400 7800 ) ( 6370 * ) ;
-- shift.data<5>
+- shift_data<5>
   ( DFFSR_6 Q ) 
   ( MUX2X1_3 A ) 
   ( MUX2X1_2 B ) 
@@ -384,7 +384,7 @@ NETS 85 ;
   NEW metal3 ( 2240 11200 ) ( 3840 * ) M3_M2 
   NEW metal1 ( 3840 11200 ) M2_M1 
   NEW metal1 ( 3840 11200 ) ( 3930 * ) ;
-- shift.data<6>
+- shift_data<6>
   ( DFFSR_7 Q ) 
   ( MUX2X1_4 A ) 
   ( MUX2X1_3 B ) 
@@ -551,7 +551,7 @@ NETS 85 ;
   NEW metal2 ( 800 1200 ) M3_M2 
   NEW metal3 ( 800 1200 ) ( 3360 * ) M3_M2 
   NEW metal2 ( 3360 1200 ) ( * 1400 ) M2_M1 ;
-- shift.data<0>
+- shift_data<0>
   ( MUX2X1_6 A ) 
   ( MUX2X1_5 B ) 
   ( DFFSR_1 Q ) 
@@ -618,7 +618,7 @@ NETS 85 ;
   NEW metal2 ( 1280 2800 ) M3_M2 
   NEW metal3 ( 1280 2800 ) ( 5280 * ) M3_M2 
   NEW metal1 ( 5280 2800 ) M2_M1 ;
-- shift.data<1>
+- shift_data<1>
   ( MUX2X1_7 A ) 
   ( MUX2X1_6 B ) 
   ( DFFSR_2 Q ) 
@@ -638,7 +638,7 @@ NETS 85 ;
   NEW metal2 ( 4480 6400 ) ( * 6200 ) M3_M2 
   NEW metal3 ( 4480 6200 ) ( 8640 * ) M3_M2 
   NEW metal2 ( 8640 6200 ) ( * 5400 ) M2_M1 ;
-- shift.data<2>
+- shift_data<2>
   ( MUX2X1_8 A ) 
   ( MUX2X1_7 B ) 
   ( DFFSR_3 Q ) 
@@ -690,7 +690,7 @@ NETS 85 ;
 + ROUTED metal3 ( 16320 7200 ) ( 16160 * ) M3_M2 
   NEW metal2 ( 16160 7200 ) ( * 7400 ) M2_M1 
   NEW metal1 ( 16160 7400 ) ( 15840 * ) ;
-- ctrl.cstate<1>
+- ctrl_cstate<1>
   ( DFFSR_10 Q ) 
   ( OAI21X1_6 A ) 
   ( INVX1_1 A ) 
@@ -703,7 +703,7 @@ NETS 85 ;
   ( NAND2X1_6 A ) 
   ( INVX1_1 Y ) 
 + ROUTED metal1 ( 10720 5400 ) ( 10880 * ) ;
-- ctrl.count<0>
+- ctrl_count<0>
   ( DFFSR_14 Q ) 
   ( NAND3X1_2 A ) 
   ( NOR2X1_2 A ) 
@@ -725,7 +725,7 @@ NETS 85 ;
   NEW metal3 ( 10400 9800 ) ( 12480 * ) M3_M2 
   NEW metal2 ( 12480 9800 ) ( * 9400 ) 
   NEW metal1 ( 10720 11200 ) ( 10400 * ) ( 10410 * ) ;
-- ctrl.count<1>
+- ctrl_count<1>
   ( DFFSR_15 Q ) 
   ( NAND3X1_2 B ) 
   ( NOR2X1_2 B ) 
@@ -746,7 +746,7 @@ NETS 85 ;
   NEW metal2 ( 12640 7000 ) M3_M2 
   NEW metal3 ( 12640 7000 ) ( 13120 * ) M3_M2 
   NEW metal2 ( 13120 7000 ) ( * 9000 ) ;
-- ctrl.count<2>
+- ctrl_count<2>
   ( DFFSR_16 Q ) 
   ( INVX1_5 A ) 
   ( NAND2X1_9 A ) 
@@ -772,7 +772,7 @@ NETS 85 ;
   NEW metal1 ( 11200 7200 ) M2_M1 
   NEW metal2 ( 11200 7200 ) ( * 7400 ) M3_M2 
   NEW metal3 ( 11200 7400 ) ( 13280 * ) M3_M2 ;
-- ctrl.clk_en
+- ctrl_clk_en
   ( DFFSR_11 Q ) 
   ( BUFX4_2 A ) 
   ( OAI21X1_6 B ) 
@@ -823,7 +823,7 @@ NETS 85 ;
   NEW metal3 ( 13760 6800 ) ( 14080 * ) M3_M2 
   NEW metal1 ( 14080 6800 ) M2_M1 
   NEW metal1 ( 14080 6800 ) ( 14400 * ) ;
-- ctrl.cstate<4>
+- ctrl_cstate<4>
   ( DFFSR_13 Q ) 
   ( BUFX2_5 A ) 
   ( OAI21X1_7 A ) 
@@ -931,7 +931,7 @@ NETS 85 ;
   NEW metal2 ( 10080 9400 ) M3_M2 
   NEW metal3 ( 10080 9400 ) ( 12000 * ) M3_M2 
   NEW metal2 ( 12000 9400 ) ( * 10400 ) M2_M1 ;
-- ctrl.cstate<3>
+- ctrl_cstate<3>
   ( DFFSR_12 Q ) 
   ( DFFSR_10 D ) 
   ( BUFX4_1 A ) 
@@ -975,7 +975,7 @@ NETS 85 ;
   NEW metal3 ( 14880 7200 ) ( * 7000 ) M4_M3 
   NEW metal4 ( 14880 7000 ) ( * 9600 ) M4_M3 
   NEW metal3 ( 14880 9600 ) ( 13920 * ) ;
-- ctrl.cstate<0>
+- ctrl_cstate<0>
   ( DFFSR_9 Q ) 
   ( INVX1_8 A ) 
   ( OAI21X1_7 B ) 
@@ -1111,15 +1111,15 @@ SPECIALNETS 19 ;
 + ROUTED metal1 80 ( 6400 2970 ) ( * 3040 ) ;
 - _24_
 + ROUTED metal1 80 ( 10560 6970 ) ( * 7040 ) ;
-- ctrl.clk_en
+- ctrl_clk_en
 + ROUTED metal1 80 ( 11680 10970 ) ( * 11080 ) ;
-- ctrl.count<0>
+- ctrl_count<0>
 ;
-- ctrl.count<1>
+- ctrl_count<1>
 + ROUTED metal1 80 ( 13150 9200 ) ( 13080 * ) ;
-- ctrl.count<2>
+- ctrl_count<2>
 + ROUTED metal1 80 ( 13120 9030 ) ( * 8920 ) ;
-- shift.data<1>
+- shift_data<1>
 ;
 - _11_
 ;

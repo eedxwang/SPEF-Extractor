@@ -162,27 +162,29 @@ def get_resistance_modified(point1, point2, layer_name, via_type): #point is a l
         return lef_parser.layer_dict[via_type].resistance
     else: #we have a wire
         rPerSquare = lef_parser.layer_dict[layer_name].resistance[1]
-        width = lef_parser.layer_dict[layer_name].width
-        wire_len = abs(point1[0] - point2[0]) + abs(point1[1] - point2[1])
-        resistance = wire_len * rPerSquare / width
-        return resistance/l2d
+        width = lef_parser.layer_dict[layer_name].width/1000 #width in microns
+        wire_len = (abs(point1[0] - point2[0]) + abs(point1[1] - point2[1]))/100 #length in microns
+        resistance = wire_len * rPerSquare / width #R in ohms
+        #print("res", resistance)
+        return resistance
 
 def get_capacitance_modified(point1, point2, layer_name, via_type): #point is a list of (x, y)
     if(point1 == point2): #we have a via
         if(lef_parser.layer_dict[via_type].edge_cap == None):
-            return 0
+            return 2.5e-5 #capacitance in pF
         else:
             return lef_parser.layer_dict[via_type].edge_cap
     else: #we have a wire
         cPerSquare = lef_parser.layer_dict[layer_name].capacitance[1]
-        width = lef_parser.layer_dict[layer_name].width
-        length = abs(point1[0] - point2[0]) + abs(point1[1] - point2[1]) 
+        width = lef_parser.layer_dict[layer_name].width/1000 #width in microns
+        length = (abs(point1[0] - point2[0]) + abs(point1[1] - point2[1]))/100 #length in microns
         if(lef_parser.layer_dict[layer_name].edge_cap != None):
             edgeCapacitance = lef_parser.layer_dict[layer_name].edge_cap
         else:
             edgeCapacitance = 0
-        capacitance = length * cPerSquare * width + edgeCapacitance * length
-        return capacitance/l2d
+        capacitance = length * cPerSquare * width + edgeCapacitance * length  #capactiance in pF
+        #print(capacitance)
+        return capacitance
     
 
 def checkPinsTable(point, layer, pinsTable): 
@@ -304,7 +306,7 @@ lef_parser.parse()
 
 print("Input DEF file name")
 #defPath = input()
-def_parser = DefParser("spi_master.def")
+def_parser = DefParser("cpu.def")
 def_parser.parse()
 
 map_of_names = remap_names()
@@ -504,7 +506,7 @@ def printSPEFHeader():
     f.write('*DELIMITER :' + '\n')
     f.write('*BUS_DELIMITER ' + def_parser.busbitchars[1:3] +'\n')
     f.write('*T_UNIT 1.00000 NS' +'\n')
-    f.write('*C_UNIT 1.00000 FF'+'\n')
+    f.write('*C_UNIT 1.00000 PF'+'\n')
     f.write('*R_UNIT 1.00000 OHM'+'\n')
     f.write('*L_UNIT 1.00000 HENRY'+'\n')
     f.write('\n'+'\n')
