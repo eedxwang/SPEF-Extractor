@@ -11,7 +11,7 @@ import datetime
 #in order to print Date in the SPEF file
 now = datetime.datetime.now()
     
-def remap_names():
+def remap_names():  #name mapping method that reduces all net names in order to minimize the SPEF size
     name_counter = 0
     map_of_names = []
     for key in def_parser.nets.net_dict:
@@ -24,13 +24,13 @@ def remap_names():
     return(map_of_names)
 
 
-def printNameMap(map_of_names):
+def printNameMap(map_of_names): #printing the keys of the name map into the SPEF file 
     f.write('*NAME_MAP\n')
     for entry in map_of_names:
         f.write(entry[1] + " " + entry[0] + "\n")
     f.write("\n")
 
-# A function that takes an instance and a pin and returns a list of all
+# A method that takes an instance and a pin and returns a list of all
 # rectangles of that pin 
 def getPinLocation(instanceName, pinName, listOfPinRects):
     #myInstance = def_parser.components.get_comp(instanceName)
@@ -143,7 +143,7 @@ def getPinLocation(instanceName, pinName, listOfPinRects):
             ur = (urx, ury)
             listOfPinRects.append((ll, ur))
 
-def getViaType(via):
+def getViaType(via): #method to extract the via type by its name fromt the lef file
     firstLayer = lef_parser.via_dict[via].layers[0]
     secondLayer = lef_parser.via_dict[via].layers[1]
     thirdLayer = lef_parser.via_dict[via].layers[2]
@@ -158,6 +158,7 @@ def getViaType(via):
     return via_type
                  
    
+#method to get the resistance of a certain segment (wire of via) using its length (distance between 2 points) and info from the lef file
 def get_resistance_modified(point1, point2, layer_name, via_type): #point is a list of (x, y)
     if(point1 == point2): #we have a via
         return lef_parser.layer_dict[via_type].resistance
@@ -169,6 +170,7 @@ def get_resistance_modified(point1, point2, layer_name, via_type): #point is a l
         #print("res", resistance)
         return resistance
 
+#method to get the capacitance of a certain segment (wire of via) using its length (distance between 2 points) and info from the lef file
 def get_capacitance_modified(point1, point2, layer_name, via_type): #point is a list of (x, y)
     if(point1 == point2): #we have a via
         if(lef_parser.layer_dict[via_type].edge_cap == None):
@@ -188,6 +190,7 @@ def get_capacitance_modified(point1, point2, layer_name, via_type): #point is a 
         return capacitance
     
 
+#method to look for intersetions between segment nodes in order to decide on creating a new node or add to the existing capacitance
 def checkPinsTable(point, layer, pinsTable): 
     #if(point[0] == 13440) and (point[1] == -199):
       #  print('here')
@@ -215,10 +218,13 @@ def checkPinsTable(point, layer, pinsTable):
             flag= "new"
     return flag
 
+#method to print all nets in the net dictionay
 def printSPEFNets(netsDict):
     for key, value in netsDict.items():
         printNet(netsDict, key)
-        
+
+
+#method to print a particular net into SPEF format 
 def printNet(netsDict, wireName):
     var=('*D_NET'+" "+ wireName+" "+ str(netsDict[wireName]['maxC']))
     f.write(var+'\n')
@@ -270,16 +276,12 @@ def printNet(netsDict, wireName):
 # main starts here:
     
     
-    
-pinsTable = []
-
 # l2d is the conversion factor between the scale in LEF and DEF
 # we need a function to generalize this for any two lef and def files
 l2d = 100
     
 listOfLocations = []
-
-
+pinsTable = []
 segmentsList = []
 bigPinsTable={}
 bigSegmentsTable = {}
@@ -310,6 +312,7 @@ print("Input DEF file name")
 def_parser = DefParser("spi_master.def")
 def_parser.parse()
 
+#creation of the name map
 map_of_names = remap_names()
 
 for net in def_parser.nets:
@@ -495,6 +498,7 @@ for net in def_parser.nets:
     netsDict[net.name]= lists
 
 
+#method for creating the header of the SPEF file 
 def printSPEFHeader():
     f.write('*SPEF "IEEE 1481-1998"'+'\n')
     f.write('*DESIGN "'+ def_parser.design_name + '"'+'\n')
@@ -516,6 +520,7 @@ def printSPEFHeader():
 print("RC Extraction is done")
 
  
+#writing into SPEF file
 capCounter = {}
 capCounter[0] = 0
 resCounter = {}
