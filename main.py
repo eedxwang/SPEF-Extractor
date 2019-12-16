@@ -316,12 +316,13 @@ def_parser.parse()
 map_of_names = remap_names()
 
 for net in def_parser.nets:
+#traversing over all nets in the def file to extract segments infromation
     conList = []
     pinsTable=[]
     segmentsList = []
     # generate the conn data structure for conn section
     for con in net.comp_pin:
-        #check if pin is *P
+        #check if pin is (*P) an external input/output pin
         current_pin = []
         locationsOfCurrentPin = []
         if(con[0] == "PIN"):
@@ -339,7 +340,7 @@ for net in def_parser.nets:
             locationsOfCurrentPin.append(pinLocation)
             
             
-        else:
+        else: #it is an internal pin, check for input or output
             current_pin.append("*I")
             current_pin.append(con[0]+":"+con[1]) 
             cell_type = def_parser.components.comp_dict[con[0]].macro
@@ -366,7 +367,10 @@ for net in def_parser.nets:
     # the value will be incremented if more than 1 segment end at the same node
     currentNodeList = {}
     for segment in net.routed:
+    #traversing all segments in a certain net to get all their information
         for it in range (len(segment.points)):
+        ##traversing all points in a certain segment, classifyng them as starting and ending points and 
+        #checking for their existence in the pinstable, using checkPinsTable method 
             last = 0
             if(it < (len(segment.points) - 1)):
                 spoint = segment.points[it]
@@ -395,6 +399,7 @@ for net in def_parser.nets:
                 
             
             if ((last) and  (segment.end_via != ';' and segment.end_via != None)):
+            #special handeling for vias to tget the via types through the via name
                 myVia = segment.end_via
                 if(myVia[-1] == ';'):
                     myVia = myVia[0:-1]
@@ -464,16 +469,15 @@ for net in def_parser.nets:
                 if(currentNodeName == key):
                     exists = 1
                     break
-            if(exists == 1):
+            if(exists == 1): #adding the capacitance to the previous capacitances in an existing node
                 currentNodeList[currentNodeName] += capacitance
-            else:
+            else: #assigning the new node capacitance
                 currentNodeList[currentNodeName] = capacitance
             
             if(snode[1] != 'PIN'):
                 seg.append(snode[1]  + ':' + snode[2])
             else:
                 seg.append(snode[2])
-                #print (seg)
             if(enode[1] != 'PIN'): 
                 seg.append(enode[1]  + ':' + enode[2])
             else:
@@ -482,7 +486,9 @@ for net in def_parser.nets:
             seg.append(capacitance)
             segmentsList.append(seg)
     
-                 
+    
+    ##appending the pins, segments resistances and node capacitances into the big table dictionaries that will
+    #be used for printing the final SPEF             
     bigPinsTable[net.name] = pinsTable
     bigSegmentsTable[net.name] = segmentsList
     bigCapacitanceTable[net.name] = currentNodeList
