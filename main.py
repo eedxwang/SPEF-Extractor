@@ -1,10 +1,11 @@
      # -*- coding: utf-8 -*-
+import sys
+sys.path.insert(0, './lef_def_parser')
+
 from def_parser import *
 from lef_parser import *
-
+import codecs
 from collections import defaultdict
-
-import sys
 import datetime
 
 #in order to print Date in the SPEF file
@@ -520,11 +521,18 @@ capCounter[0] = 0
 resCounter = {}
 resCounter[0] = 0
 f = open("RC_parasitics.spef","w+")
-
 print("Start writing SPEF file")
 printSPEFHeader()
 printNameMap(map_of_names)
 printSPEFNets(netsDict)  
 f.close()
+content = codecs.open('RC_parasitics.spef', encoding='utf-8').read()
+newContent = content.replace('<', '[')
+newContent = newContent.replace('>', ']')
+newContent = newContent.replace('\n', '')
+
+f =  open("RC_parasitics.spef","w+")
+f.write(newContent)
+
 print("Writing SPEF is done")
 
