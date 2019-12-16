@@ -270,7 +270,7 @@ bigCapacitanceTable = {}
 netsDict = {}
 
 #run from terminal section
-"""
+
 if(len(sys.argv) < 3):
     sys.exit("Arguments should be passed: python <script_name>.py <path/lef_name>.lef <path/def_name>.def")
 elif(sys.argv[1].find(".lef") == -1 or sys.argv[2].find(".def") == -1):
@@ -278,19 +278,19 @@ elif(sys.argv[1].find(".lef") == -1 or sys.argv[2].find(".def") == -1):
 else:
     lef_file_name = sys.argv[1]
     def_file_name = sys.argv[2]
-"""    
+    
 
 print("Input LEF file name")
 #lefPath = input()
 
 # We had to modify the lef parser to ignore the second parameter for the offset
 # since our files provide only 1 value
-lef_parser = LefParser("osu035.lef")
+lef_parser = LefParser(lef_file_name)
 lef_parser.parse()
 
 print("Input DEF file name")
 #defPath = input()
-def_parser = DefParser("spi_master.def")
+def_parser = DefParser(def_file_name)
 def_parser.parse()
 
 #creation of the name map
