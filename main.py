@@ -167,7 +167,6 @@ def get_resistance_modified(point1, point2, layer_name, via_type): #point is a l
         width = lef_parser.layer_dict[layer_name].width/1000 #width in microns
         wire_len = (abs(point1[0] - point2[0]) + abs(point1[1] - point2[1]))/100 #length in microns
         resistance = wire_len * rPerSquare / width #R in ohms
-        #print("res", resistance)
         return resistance
 
 #method to get the capacitance of a certain segment (wire of via) using its length (distance between 2 points) and info from the lef file
@@ -186,14 +185,11 @@ def get_capacitance_modified(point1, point2, layer_name, via_type): #point is a 
         else:
             edgeCapacitance = 0
         capacitance = length * cPerSquare * width + edgeCapacitance * length  #capactiance in pF
-        #print(capacitance)
         return capacitance
     
 
 #method to look for intersetions between segment nodes in order to decide on creating a new node or add to the existing capacitance
 def checkPinsTable(point, layer, pinsTable): 
-    #if(point[0] == 13440) and (point[1] == -199):
-      #  print('here')
     flag= "new"
     for j in pinsTable:
         if(layer == j[3]):
@@ -244,21 +240,6 @@ def printNet(netsDict, wireName):
         f.write(var+'\n')
         capCounter[0] += 1
         
-    """
-    start = 1 #flag to print pin capacitance = 0
-    for eachSegment in netsDict[wireName]['segments']:
-        if(start):
-            var=(str(capCounter[0])+ " "+ str(eachSegment[0])+" "+ '0')
-            f.write(var+'\n')
-            capCounter[0] += 1
-            var=(str(capCounter[0]) +" "+ str(eachSegment[1]) +" "+ str(eachSegment[3]))
-            f.write(var+'\n')
-            start = 0
-        else:
-            var=(str(capCounter[0]) +" "+ str(eachSegment[1]) +" "+ str(eachSegment[3]))
-            f.write(var+'\n')
-        capCounter[0] += 1
-    """    
     var=('*RES')
     f.write(var+'\n')
     for eachSegment in netsDict[wireName]['segments']:
@@ -363,7 +344,6 @@ for net in def_parser.nets:
     
     counter = 1
     
-    # TODO: this will be used to store capacitance value of each internal node.
     # the value will be incremented if more than 1 segment end at the same node
     currentNodeList = {}
     for segment in net.routed:
@@ -463,7 +443,6 @@ for net in def_parser.nets:
             # the name of the current node
             currentNodeName = str(enode[1]) + ':' + str(enode[2])
             # put the capacitance for the current node.
-            # TODO: consider multiple segments ending at the same point: add to valie if it exists
             exists = 0
             for key in currentNodeList:
                 if(currentNodeName == key):
