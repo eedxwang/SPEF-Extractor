@@ -309,7 +309,7 @@ lef_parser.parse()
 
 print("Input DEF file name")
 #defPath = input()
-def_parser = DefParser("Designs\cpu.def")
+def_parser = DefParser("spi_master.def")
 def_parser.parse()
 
 #creation of the name map
