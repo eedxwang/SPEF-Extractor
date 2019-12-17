@@ -552,7 +552,7 @@ NETS 377 ;
   NEW metal2 ( 20000 7000 ) ( * 7200 ) M3_M2 
   NEW metal3 ( 20000 7200 ) M4_M3 
   NEW metal4 ( 20000 7200 ) ( * 11000 ) M4_M3 ;
-- _13__bF$buf3
+- _13__bF_buf3
   ( NAND2X1_22 A ) 
   ( NAND3X1_11 A ) 
   ( NAND3X1_13 A ) 
@@ -579,7 +579,7 @@ NETS 377 ;
   NEW metal1 ( 12800 13000 ) M2_M1 
   NEW metal2 ( 12800 13000 ) ( * 14400 ) M3_M2 
   NEW metal3 ( 12800 14400 ) ( 15200 * ) ;
-- _13__bF$buf2
+- _13__bF_buf2
   ( OAI21X1_32 A ) 
   ( OAI21X1_62 C ) 
   ( OAI21X1_1 C ) 
@@ -603,7 +603,7 @@ NETS 377 ;
   NEW metal1 ( 13920 6800 ) M2_M1 
   NEW metal2 ( 13920 6800 ) ( * 3200 ) M3_M2 
   NEW metal3 ( 13920 3200 ) ( 14080 * ) ;
-- _13__bF$buf1
+- _13__bF_buf1
   ( OAI22X1_3 A ) 
   ( OAI22X1_1 A ) 
   ( OAI22X1_4 A ) 
@@ -631,7 +631,7 @@ NETS 377 ;
   NEW metal3 ( 20480 2800 ) ( 20640 * ) M4_M3 
   NEW metal4 ( 20640 2800 ) ( * 9400 ) M4_M3 
   NEW metal3 ( 20640 9400 ) ( 22080 * ) ;
-- _13__bF$buf0
+- _13__bF_buf0
   ( OAI21X1_36 C ) 
   ( NAND2X1_25 A ) 
   ( NAND2X1_20 A ) 
@@ -684,7 +684,7 @@ NETS 377 ;
   NEW metal2 ( 4160 9400 ) ( * 11000 ) 
   NEW metal1 ( 160 5200 ) M2_M1 
   NEW metal2 ( 160 5200 ) M3_M2 ;
-- clk_bF$buf6
+- clk_bF_buf6
   ( DFFPOSX1_58 CLK ) 
   ( DFFPOSX1_42 CLK ) 
   ( DFFPOSX1_50 CLK ) 
@@ -719,7 +719,7 @@ NETS 377 ;
   NEW metal3 ( 6720 11000 ) ( 5280 * ) 
   NEW metal1 ( 7680 13400 ) M2_M1 
   NEW metal2 ( 7680 13400 ) ( * 11000 ) M2_M1 ;
-- clk_bF$buf5
+- clk_bF_buf5
   ( DFFPOSX1_47 CLK ) 
   ( DFFPOSX1_46 CLK ) 
   ( DFFPOSX1_30 CLK ) 
@@ -760,7 +760,7 @@ NETS 377 ;
   NEW metal1 ( 26080 11000 ) M2_M1 
   NEW metal2 ( 26080 11000 ) ( * 10800 ) M3_M2 
   NEW metal3 ( 26080 10800 ) ( 28480 * ) ;
-- clk_bF$buf4
+- clk_bF_buf4
   ( DFFPOSX1_57 CLK ) 
   ( DFFPOSX1_60 CLK ) 
   ( DFFPOSX1_55 CLK ) 
@@ -795,7 +795,7 @@ NETS 377 ;
   NEW metal2 ( 7680 5400 ) M3_M2 
   NEW metal3 ( 7680 5400 ) ( 9120 * ) M3_M2 
   NEW metal2 ( 9120 5400 ) ( * 5200 ) ;
-- clk_bF$buf3
+- clk_bF_buf3
   ( DFFPOSX1_51 CLK ) 
   ( DFFPOSX1_45 CLK ) 
   ( DFFPOSX1_16 CLK ) 
@@ -830,7 +830,7 @@ NETS 377 ;
   NEW metal1 ( 18080 13400 ) M2_M1 
   NEW metal2 ( 18080 13400 ) ( * 17200 ) M2_M1 
   NEW metal1 ( 18080 17200 ) ( 18240 * ) ;
-- clk_bF$buf2
+- clk_bF_buf2
   ( DFFPOSX1_6 CLK ) 
   ( DFFPOSX1_3 CLK ) 
   ( DFFPOSX1_11 CLK ) 
@@ -868,7 +868,7 @@ NETS 377 ;
   NEW metal1 ( 28640 9400 ) M2_M1 
   NEW metal2 ( 28640 9400 ) ( * 8800 ) M3_M2 
   NEW metal3 ( 28640 8800 ) ( 25280 * ) M3_M2 ;
-- clk_bF$buf1
+- clk_bF_buf1
   ( DFFPOSX1_40 CLK ) 
   ( DFFPOSX1_25 CLK ) 
   ( DFFPOSX1_41 CLK ) 
@@ -902,7 +902,7 @@ NETS 377 ;
   NEW metal1 ( 1760 18800 ) M2_M1 
   NEW metal2 ( 1760 18800 ) ( * 18600 ) M3_M2 
   NEW metal3 ( 1760 18600 ) ( 3840 * ) M3_M2 ;
-- clk_bF$buf0
+- clk_bF_buf0
   ( DFFPOSX1_17 CLK ) 
   ( DFFPOSX1_18 CLK ) 
   ( DFFPOSX1_2 CLK ) 
@@ -4622,20 +4622,20 @@ SPECIALNETS 53 ;
 + ROUTED metal1 80 ( 18370 3800 ) ( 18460 * ) ;
 - _194_
 + ROUTED metal1 80 ( 14050 6400 ) ( 14140 * ) ;
-- clk_bF$buf6
+- clk_bF_buf6
 + ROUTED metal1 80 ( 2720 9430 ) ( * 9360 ) 
   NEW metal1 80 ( 1730 11400 ) ( 1860 * ) ;
-- clk_bF$buf4
+- clk_bF_buf4
 + ROUTED metal1 80 ( 1310 1400 ) ( 1240 * ) ;
-- clk_bF$buf3
+- clk_bF_buf3
 + ROUTED metal1 80 ( 13790 15400 ) ( 13660 * ) 
   NEW metal1 80 ( 14530 18800 ) ( 14620 * ) ;
-- clk_bF$buf2
+- clk_bF_buf2
 + ROUTED metal1 80 ( 18110 1400 ) ( 18040 * ) 
   NEW metal1 80 ( 22240 1430 ) ( * 1360 ) ;
-- clk_bF$buf1
+- clk_bF_buf1
 + ROUTED metal1 80 ( 2910 15400 ) ( 2780 * ) ;
-- clk_bF$buf0
+- clk_bF_buf0
 + ROUTED metal1 80 ( 22240 6770 ) ( * 6840 ) ;
 - _18_
 + ROUTED metal1 80 ( 28450 5800 ) ( 28540 * ) ;
